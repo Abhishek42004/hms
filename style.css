@@ -1,0 +1,397 @@
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #f8f8f8;
+  margin: 0;
+  padding: 0;
+}
+
+
+.navbar {
+  background-color: #333;
+  padding:0px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  color: #fff;
+  font-size: 1.5em;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  z-index: 100;
+  top: 16px;
+}
+
+.nav-list li {
+  margin-right: 20px;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.burger-menu {
+  font-size: 1.5em;
+  color: #fff;
+  cursor: pointer;
+  display: none;
+}
+
+.content {
+  padding: 20px;
+}
+
+@media only screen and (max-width: 768px) {
+  .nav-list {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 16px;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    text-align: center;
+  }
+
+  .nav-list.show {
+    display: flex;
+    padding-left: 0;
+  }
+
+  .nav-list li {
+    margin: 10px 0;
+  }
+
+  .burger-menu {
+    display: block;
+  }
+}
+
+header {
+  color: black;
+  text-align: center;
+
+  font-size: 1.5em;
+}
+
+.container {
+  margin: 20px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  /* margin-bottom: 10px; */
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.radio-options {
+  display: flex;
+  gap: 10px;
+}
+
+.radio-options input[type="radio"] {
+  margin-right: 5px;
+}
+/* Add this CSS to your <style> tag or external CSS file */
+.date-columns {
+  display: flex;
+  gap: 20px;
+  font-size: 14px; /* Adjust the font size as needed */
+  align-items: center;
+}
+
+.date-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.date-column label {
+  margin-bottom: 5px;
+}
+form h2 {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.date-column input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.container {
+  width: 90%;
+  margin: auto;
+  padding: 20px;
+
+  overflow-y: auto; /* Enable scrolling if needed */
+
+  gap: 20px;
+ display: flex;
+}
+
+form {
+  display: grid;
+  gap: 10px;
+  grid-column: span 2; /* Span both columns */
+}
+
+section {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+label {
+  white-space: nowrap;
+}
+
+/* Add this CSS to your <style> tag or external CSS file */
+.relationship-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: -5px;
+  justify-content: unset;
+}
+
+#totalBilling {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: 2px solid #3498db;
+  border-radius: 5px;
+  background-color: #ecf0f1;
+}
+
+#totalPrice {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+#serialNo {
+  background-color: #f5f5f5; /* Light gray background color */
+  border: 1px solid #ddd; /* Gray border */
+  padding: 8px; /* Padding for better visibility */
+  font-weight: bold; /* Bold text */
+  color: #333; /* Dark text color */
+  width: 100px; /* Adjust the width as needed */
+}
+
+/* Add this CSS to your existing styles or create a new stylesheet */
+#lessAmount {
+  border: 1px solid #ccc;
+  padding: 5px;
+  font-size: 16px;
+}
+
+#lessAmount:focus {
+  outline: none;
+  border-color: #3498db; /* Highlight border color when the field is focused */
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.7); /* Add a subtle box shadow when focused */
+}
+
+/* Add styles for error state */
+input:invalid {
+  border-color: #ff3333;
+}
+input:focus,
+select:focus {
+  border-color: #4caf50;
+}
+
+.services-container {
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+}
+
+.service {
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.service.selected {
+  background-color: #e6f7ff; /* Change the background color when selected */
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.service-price {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.parts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 5px;
+}
+
+.parts-list li {
+  margin-bottom: 5px;
+}
+
+.total-price {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Style for the body parts dropdown */
+.body-parts-dropdown {
+  display: none;
+  margin-top: 5px; /* Adjust the value to set the margin between checkbox and dropdown */
+}
+table {
+  border-collapse: unset;
+  border: 1px solid black;
+  width: 100%;
+  min-width: 500px;
+}
+table th {
+  background-color: #0000001c;
+  padding: 2px 8px;
+}
+
+#serviceTable tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+#serviceTable tbody tr:hover {
+  background-color: #ddd;
+}
+
+#serviceTable td.price {
+  background-color: #ffc107; /* Highlighted background color for Price column */
+}
+
+#serviceTable input {
+  border: none;
+  outline: none;
+  font-size: 15px;
+  width: 100%;
+  padding: 7px;
+}
+tr td:nth-child(2) {
+  background-color: #cc4a4a6b;
+  font-weight: bold;
+  padding-left: 5px;
+}
+tr td:nth-child(1) {
+  border: 1px solid rgba(0, 0, 0, 0.619);
+}
+
+#servicetable td input[type="text"]:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+#servicetable td input[type="text"]:invalid {
+  border-color: #ff3333;
+}
+
+#servicetable td input[type="text"]::placeholder {
+  color: black;
+}
+
+#servicetable td label {
+  display: block;
+  padding: 5px;
+  margin: 0px;
+}
+
+#servicetable td select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+#servicetable td select:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+#servicetable td select:invalid {
+  border-color: #ff3333;
+}
+
+/* Add hover effect for the whole row */
+#servicetable tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.suggestions-container {
+  position: absolute;
+  top: 40px;
+  left: 20px;
+  z-index: 10;
+  background-color: #f2f2f2;
+  /* display: none; */
+  border: 1px solid #ddd;
+  max-height: 500px;
+  overflow-y: auto;
+  width: 500px;
+  background-color: bisque;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.suggestion {
+  padding: 8px;
+  cursor: pointer;
+}

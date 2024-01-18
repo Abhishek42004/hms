@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Record Search</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        overflow-x: scroll;
+        height: 100vh;
+      }
+
+      main {
+        width: 99%;
+        margin-top: 20px;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      header {
+        background-color: #3498db;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 1.5em;
+      }
+
+      form {
+        padding: 20px;
+        display: flex;
+        gap: 10px;
+      }
+
+      select,
+      input {
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 14px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 5px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #3498db;
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      tr:hover {
+        background-color: #e0e0e0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>Patient Record Search</header>
+
+      <form id="searchForm">
+        <select id="searchProperty" name="searchProperty">
+          <option value="patientName">Patient Name</option>
+          <option value="serialNo">Serial No.</option>
+          <option value="date">Visit Date</option>
+          <option value="age">Age</option>
+          <option value="name">Relative Name</option>
+          <option value="address">Adress</option>
+          <option value="contactNo">Contact No.</option>
+          <option value="referred">Referred</option>
+          <option value="gender">Gender</option>
+
+          <!-- Add more options as needed -->
+        </select>
+
+        <input
+          style="flex: 1"
+          type="text"
+          id="searchInput"
+          name="searchInput"
+          placeholder="Enter search value"
+        />
+
+        <button type="button" onclick="searchRecords()">Search</button>
+      </form>
+
+      <table id="patientTable">
+        <thead>
+          <tr>
+            <th>Serial No</th>
+            <th>Patient Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Contact No</th>
+            <th>Services Opted</th>
+
+            
+            <th>Visit Date</th>
+            <th>Relationship</th>
+            <th>Address</th>
+            <th>Referred</th>
+            <th>Consultancy</th>
+            <th>Admit Date</th>
+            <th>Total</th>
+            <th>Less</th>
+            <th>Net Amount</th>
+          </tr>
+        </thead>
+        <tbody id="patientTableBody">
+          <!-- Data rows will be dynamically added here -->
+        </tbody>
+      </table>
+    </main>
+
+    <script>
+      // Sample function to simulate searching records
+      // Function to send a GET request to search patient records
+      function searchRecords() {
+        // Get the selected search property and search input value
+        const searchProperty = document.getElementById("searchProperty").value;
+        const searchInput = document.getElementById("searchInput").value;
+
+        // Construct the URL for the search request
+        const searchUrl = `http://localhost:3000/api/patient/search?${searchProperty}=${encodeURIComponent(
+          searchInput
+        )}`;
+
+        // Fetch API to send a GET request to the backend
+        fetch(searchUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            // Call a function to update the table with the search results
+
+            updatePatientTable(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Failed to fetch patient data. Please try again.");
+          });
+      }
+
+      // Function to update the patient table with the provided data
+      function updatePatientTable(searchResults) {
+        
+        const tableBody = document.getElementById("patientTableBody");
+        tableBody.innerHTML = ""
+        function formatDateTime(mongoDBDate) {
+          const date = new Date(mongoDBDate);
+
+          // Format the date
+          const optionsDate = {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+          };
+          const formattedDate = date.toLocaleDateString("en-US", optionsDate);
+
+          // Format the time
+          const optionsTime = {
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: true,
+          };
+          const formattedTime = date.toLocaleTimeString("en-US", optionsTime);
+
+          return `${formattedDate} ${formattedTime}`;
+        }
+
+        // Check if the searchResults array is empty
+        if (searchResults.length === 0) {
+          const emptyRow = document.createElement("tr");
+          emptyRow.innerHTML =
+            '<td colspan="15">No matching records found.</td>';
+          tableBody.appendChild(emptyRow);
+          return;
+        }
+
+        // Loop through the search results and add rows to the table
+        searchResults.forEach((patientData) => {
+          // Example usage
+          const mongoDBDate = patientData.date;
+          patientData.date = formatDateTime(mongoDBDate);
+
+          // Create a new row for the patient
+          const newRow = document.createElement("tr");
+          newRow.innerHTML = `
+          <td>${patientData.serialNo}</td>
+      <td>${patientData.patientName}</td>
+    <td>${patientData.age}</td>
+    <td>${patientData.gender}</td>
+    <td>${patientData.contactNo}</td>
+    <td>${patientData.servicesData
+      .filter((service) => service.service != "")
+      .map((service) => service.service)
+      .join(", ")}</td>
+    
+    
+    <td>${patientData.date}</td>
+    <td>${patientData.relationship} - ${patientData.name} </td>
+    <td>${patientData.address}</td>
+    <td>${patientData.referred}</td>
+    <td>${patientData.consultancy}</td>
+    <td>${patientData.admitDate}</td>
+    <td>${patientData.totalAmount}</td>
+    <td>${patientData.lessAmount}</td>
+    <td>${patientData.netAmount}</td>
+      `;
+
+          // Append the new row to the table body
+          tableBody.appendChild(newRow);
+        });
+      }
+    </script>
+  </body>
+</html>

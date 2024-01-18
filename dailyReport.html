@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Report</title>
+    <style>
+      /* Add your CSS styling here */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f8f8;
+      }
+
+      header {
+        background-color: #333;
+        color: white;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 14px;
+        line-height: 5px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 3px;
+        text-align: left;
+      }
+      /* Style for the patient table */
+      #patientTable {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #patientTable th,
+      #patientTable td {
+        border: 1px solid #ddd;
+        padding: 5px;
+        text-align: left;
+      }
+
+      #patientTable th {
+        background-color: #3498db;
+        color: white;
+      }
+
+      #patientTable tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      #patientTable tbody tr:hover {
+        background-color: #e0e0e0;
+      }
+
+      /* Responsive table */
+      @media (max-width: 600px) {
+        #patientTable {
+          font-size: 14px;
+        }
+
+        #patientTable th,
+        #patientTable td {
+          padding: 8px;
+        }
+      }
+
+      /* Style for the summary section */
+      #summarySection {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      #summaryTitle {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      #summaryTable {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      #summaryTable th,
+      #summaryTable td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+
+      #summaryTable th {
+        background-color: #3498db;
+        color: white;
+      }
+
+      #summaryTable tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      #summaryTable tbody tr:hover {
+        background-color: #e0e0e0;
+      }
+
+      /* Responsive summary table */
+      @media (max-width: 600px) {
+        #summaryTable {
+          font-size: 14px;
+        }
+
+        #summaryTable th,
+        #summaryTable td {
+          padding: 8px;
+        }
+      }
+      td,th {
+        line-height: 15px;
+      }
+      @media print {
+        body {
+          margin: 0;
+          padding: 0;
+          margin: 0.2cm;
+        }
+
+        .bill-container {
+          border: none;
+        }
+
+        header,
+        footer,
+        nav,
+        aside {
+          display: none;
+        }
+
+        button {
+          display: none;
+        }
+      }
+
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      .print-button {
+        background-color: #2ecc71;
+        color: #fff;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        position: absolute;
+        top: 20px;
+        right: 10px;
+      }
+
+      .print-button:hover {
+        background-color: #27ae60;
+      }
+    </style>
+  </head>
+  <body>
+   <button class="print-button" onclick="printBill()">Print</button>
+    <div class="container">
+      <div id="summarySection">
+        <div id="summaryTitle">Summary for the Day</div>
+        <table id="summaryTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Total Patients</th>
+              <th>Total Amount Collected</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Insert dynamic summary data here -->
+            <tr>
+              <td>2024-01-10</td>
+              <td>10</td>
+              <td>₹15,000.00</td>
+            </tr>
+            <!-- Add more rows as needed -->
+          </tbody>
+        </table>
+        <table id="patientTable">
+          <thead>
+            <tr>
+              <th>S No.</th>
+              <th>Patient Name</th>
+              <th>Age</th>
+              <th>SEX</th>
+              <th>Visited Time</th>
+              <th>Reffered</th>
+              <th>Services Opted</th>
+              <th>Total </th>
+            </tr>
+          </thead>
+          <tbody id="patientTableBody">
+            <!-- Patient data will be dynamically added here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      // Sample patient data with total amount paid and services opted
+      const samplePatientData = [
+        {
+          serialNo: "S001",
+          patientName: "Ravi Kumar",
+          age: 40,
+          gender: "Male",
+          visitedDate: "2024-01-08",
+          visitedTime: "09:30:00 AM",
+          totalAmountPaid: 1200,
+          referred: "Dr. Smith",
+          servicesOpted: [
+            { service: "X-ray", quantity: 2, price: 400 },
+            { service: "ECG", quantity: 1, price: 400 },
+            { service: "Consultancy", quantity: 1, price: 200 },
+          ],
+        },
+        {
+          serialNo: "S002",
+          patientName: "Priya Sharma",
+          age: 32,
+          gender: "Female",
+          visitedDate: "2024-01-08",
+          visitedTime: "10:15:00 AM",
+          totalAmountPaid: 1500,
+          referred: "Dr. Johnson",
+          servicesOpted: [
+            { service: "USG", quantity: 1, price: 1000 },
+            { service: "Lab", quantity: 1, price: 200 },
+          ],
+        },
+        {
+          serialNo: "S003",
+          patientName: "Amit Patel",
+          age: 45,
+          gender: "Male",
+          visitedDate: "2024-01-08",
+          visitedTime: "11:00:00 AM",
+          totalAmountPaid: 800,
+          referred: "Dr. Brown",
+          servicesOpted: [
+            { service: "ECG", quantity: 1, price: 400 },
+            { service: "Consultancy", quantity: 1, price: 200 },
+          ],
+        },
+        {
+          serialNo: "S004",
+          patientName: "Sneha Kapoor",
+          age: 28,
+          gender: "Female",
+          visitedDate: "2024-01-08",
+          visitedTime: "11:45:00 AM",
+          totalAmountPaid: 700,
+          referred: "Dr. Miller",
+          servicesOpted: [
+            { service: "X-ray", quantity: 1, price: 400 },
+            { service: "Consultancy", quantity: 1, price: 200 },
+          ],
+        },
+        {
+          serialNo: "S005",
+          patientName: "Rahul Sharma",
+          age: 35,
+          gender: "Male",
+          visitedDate: "2024-01-08",
+          visitedTime: "12:30:00 PM",
+          totalAmountPaid: 1800,
+          referred: "Dr. Davis",
+          servicesOpted: [
+            { service: "USG", quantity: 2, price: 1000 },
+            { service: "X-ray", quantity: 1, price: 400 },
+          ],
+        },
+        {
+          serialNo: "S006",
+          patientName: "Neha Gupta",
+          age: 30,
+          gender: "Female",
+          visitedDate: "2024-01-08",
+          visitedTime: "01:15:00 PM",
+          totalAmountPaid: 1000,
+          referred: "Dr. Wilson",
+          servicesOpted: [
+            { service: "Lab", quantity: 1, price: 200 },
+            { service: "ECG", quantity: 1, price: 400 },
+          ],
+        },
+        {
+          serialNo: "S007",
+          patientName: "Vikas Verma",
+          age: 50,
+          gender: "Male",
+          visitedDate: "2024-01-08",
+          visitedTime: "02:00:00 PM",
+          totalAmountPaid: 1300,
+          referred: "Dr. Anderson",
+          servicesOpted: [
+            { service: "USG", quantity: 1, price: 1000 },
+            { service: "ECG", quantity: 1, price: 400 },
+          ],
+        },
+        {
+          serialNo: "S008",
+          patientName: "Anita Singh",
+          age: 38,
+          gender: "Female",
+          visitedDate: "2024-01-08",
+          visitedTime: "02:45:00 PM",
+          totalAmountPaid: 900,
+          referred: "Dr. Thomas",
+          servicesOpted: [
+            { service: "X-ray", quantity: 1, price: 400 },
+            { service: "Consultancy", quantity: 1, price: 200 },
+          ],
+        },
+        {
+          serialNo: "S009",
+          patientName: "Rajesh Kumar",
+          age: 42,
+          gender: "Male",
+          visitedDate: "2024-01-08",
+          visitedTime: "03:30:00 PM",
+          totalAmountPaid: 1600,
+          referred: "Dr. White",
+          servicesOpted: [
+            { service: "Lab", quantity: 2, price: 200 },
+            { service: "USG", quantity: 1, price: 1000 },
+          ],
+        },
+        {
+          serialNo: "S010",
+          patientName: "Sunita Devi",
+          age: 55,
+          gender: "Female",
+          visitedDate: "2024-01-08",
+          visitedTime: "04:15:00 PM",
+          totalAmountPaid: 1100,
+          referred: "Dr. Garcia",
+          servicesOpted: [
+            { service: "Consultancy", quantity: 1, price: 200 },
+            { service: "ECG", quantity: 1, price: 400 },
+          ],
+        },
+      ];
+
+        // Implement other necessary functions as needed
+    // Function to print the bill
+    window.printBill = function () {
+        window.print();
+    };
+      // Function to populate the patient table
+      function populatePatientTable(data) {
+        const patientTableBody = document.getElementById("patientTableBody");
+
+        // Clear existing table rows
+        patientTableBody.innerHTML = "";
+
+        // Iterate through patient data and create table rows
+        data.forEach((patient) => {
+          const row = document.createElement("tr");
+          const servicesOpted = patient.servicesOpted
+            .map((service) => `${service.quantity} ${service.service}`)
+            .join(", ");
+
+          row.innerHTML = `
+      <td>${patient.serialNo}</td>
+      <td>${patient.patientName}</td>
+      <td>${patient.age}</td>
+      <td>${patient.gender.charAt(0).toUpperCase()}</td>
+      <td>${patient.visitedTime}</td>
+      <td>${patient.referred}</td>
+      <td>${servicesOpted}</td>
+      <td>₹${patient.totalAmountPaid.toFixed(2)}</td>
+    `;
+          patientTableBody.appendChild(row);
+        });
+      }
+
+      // Call the function with the sample data
+      populatePatientTable(samplePatientData);
+    </script>
+  </body>
+</html>

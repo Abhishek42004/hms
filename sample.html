@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Registration</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+      }
+      table {
+        margin-top: 20px;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .suggestions-container {
+        position: absolute;
+        top: 40px;
+        left: 20px;
+        z-index: 10;
+        background-color: #f2f2f2;
+        /* display: none; */
+        border: 1px solid #ddd;
+        max-height: 100px;
+        overflow-y: auto;
+        width: 500px;
+        background-color: bisque;
+      }
+      .suggestion {
+        padding: 8px;
+        cursor: pointer;
+      }
+
+      #serviceTable th {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      #serviceTable tbody tr:nth-child(odd) {
+        background-color: #f2f2f2;
+      }
+
+      #serviceTable tbody tr:hover {
+        background-color: #ddd;
+      }
+
+      #serviceTable td.price {
+        background-color: #ffc107; /* Highlighted background color for Price column */
+      }
+
+      #serviceTable input {
+        border: none;
+        outline: none;
+        font-size: 15px;
+        width: 100%;
+        padding: 7px;
+      }
+      tr td:nth-child(2) {
+        background-color: cadetblue;
+      }
+      tr td:nth-child(1) {
+        border: 1px solid rgba(0, 0, 0, 0.619);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Your Patient Registration Form -->
+    <form id="patientForm">
+      <!-- Include your existing form fields here -->
+
+      <!-- Service Selection Table -->
+      <table id="serviceTable" style="width: 600px">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- You can dynamically add rows with JavaScript -->
+        </tbody>
+      </table>
+      <!-- Add Row Button -->
+      <button style="margin-top: 200px" type="button" id="addRowBtn">
+        Add Row
+      </button>
+
+      <!-- Submit Button -->
+
+      <!-- JavaScript for dynamic behavior -->
+      <script>
+        function suggestService(cell) {
+          if (document.querySelector(".suggestions-container")) {
+            document.querySelector(".suggestions-container").remove();
+          }
+
+          console.log(cell);
+          const suggestions = [
+            "X-Ray",
+            "USG",
+            "OPG",
+            "ECG",
+            "Consultancy",
+            "Lab Tests",
+          ];
+          const suggestionsContainer = createSuggestionsContainer();
+          console.log(suggestionsContainer);
+          cell.parentNode.appendChild(suggestionsContainer);
+
+          cell.addEventListener("input", function () {
+            console.log("fiter kro");
+          });
+
+          suggestions.forEach((suggestion) => {
+            const suggestionElement = document.createElement("div");
+            suggestionElement.classList.add("suggestion");
+            suggestionElement.innerText = suggestion;
+            suggestionElement.addEventListener("click", function () {
+              console.log(cell);
+              cell.value = this.innerText;
+              const priceCell = cell.parentNode.nextElementSibling;
+              priceCell.innerText = getPrice(this.innerText);
+              suggestionsContainer.remove();
+            });
+            suggestionsContainer.appendChild(suggestionElement);
+            // Hide suggestions on click outside the cell
+            document.addEventListener("click", function (event) {
+              if (!cell.contains(event.target)) {
+                suggestionsContainer.remove();
+              }
+            });
+          });
+
+          function createSuggestionsContainer() {
+            const container = document.createElement("div");
+            container.classList.add("suggestions-container");
+
+            container.style.position = "absolute";
+
+            return container;
+          }
+
+          function filterSuggestions(value) {
+            const suggestionElements =
+              suggestionsContainer.querySelectorAll(".suggestion");
+            suggestionElements.forEach((suggestionElement) => {
+              const suggestionText = suggestionElement.innerText.toLowerCase();
+              if (suggestionText.includes(value.toLowerCase())) {
+                suggestionElement.style.display = "block";
+              } else {
+                suggestionElement.style.display = "none";
+              }
+            });
+
+            suggestionsContainer.style.display = "block";
+          }
+          filterSuggestions(cell.value);
+        }
+
+        function getPrice(service) {
+          switch (service) {
+            case "X-Ray":
+              return 400;
+            case "USG":
+              return 1000;
+            case "Consultancy":
+              return 200;
+            case "OPG":
+              return 500;
+            case "ECG":
+              return 400;
+            default:
+              return 0; // Default price
+          }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+          const tableBody = document.querySelector("#serviceTable tbody");
+
+          function addRow() {
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+            <td style="padding:0px;position:relative" ><input oninput="suggestService(this)"  type="text">
+</td>
+            <td contenteditable="true"></td>
+          `;
+            tableBody.appendChild(newRow);
+          }
+
+          function callFunctionNTimes(n) {
+            if (n > 0) {
+              addRow();
+              callFunctionNTimes(n - 1);
+            }
+          }
+
+          callFunctionNTimes(8);
+
+          document
+            .getElementById("addRowBtn")
+            .addEventListener("click", addRow);
+        });
+      </script>
+    </form>
+  </body>
+</html>
