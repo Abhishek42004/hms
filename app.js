@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Store the form data in localStorage
         if (formData) {
             // Fetch API to send patient data to the backend
-            fetch('http://localhost:3000/api/patient', {
+            fetch('https://puce-confused-seal.cyclic.app/api/patient', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
