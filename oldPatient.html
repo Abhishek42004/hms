@@ -10,10 +10,10 @@
     <div class="navbar">
       <div class="logo">Maheshwari Clinic</div>
       <ul class="nav-list">
+        <li><a href="./index.html">Home</a></li>
         <li><a href="./search.html">Search</a></li>
         <li><a href="./dailyReport.html">Report</a></li>
         <li><a href="./medi.html">Medical</a></li>
-        <li><a href="./oldPatient.html">Old</a></li>
       </ul>
       <div class="burger-menu">&#9776;</div>
     </div>
@@ -183,6 +183,13 @@
               required
             />
           </div>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required />
+
+            <label for="time">Time</label>
+            <input type="time" id="time" name="time" required />
+          </div>
 
           <div class="form-group">
             <div class="form-group">
@@ -227,6 +234,7 @@
               </div>
             </div>
           </div>
+
           <button type="submit" id="patientRegistrationSubmitBtn">
             Submit
           </button>
@@ -280,6 +288,6 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
-    <script src="./app.js"></script>
+    <script src="./oldPatient.js"></script>
   </body>
 </html>

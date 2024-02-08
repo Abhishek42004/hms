@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hospital Name - Patient Registration</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="logo">Maheshwari Clinic Refund Window</div>
+      <ul class="nav-list">
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./search.html">Search</a></li>
+        <li><a href="./dailyReport.html">Report</a></li>
+        <li><a href="./medi.html">Medical</a></li>
+      </ul>
+      <div class="burger-menu">&#9776;</div>
+    </div>
+    <div class="container" id="container" style="margin-top: 30px"></div>
+    <script>
+      const currentUrl = window.location.href;
+      // Parse the URL string
+      const url = new URL(currentUrl);
+      // Get the value of the 'sNo' query parameter
+      const serialNumber = url.searchParams.get("sNo");
+      const currentDate = new Date().toISOString().split("T")[0];
+      const data = JSON.parse(localStorage.getItem(currentDate));
+
+      let patient = data.filter((patient) => patient.serialNo === serialNumber);
+      console.log(patient);
+      // Function to dynamically fill the template with data
+      function fillTemplateWithData(data) {
+        console.log(data);
+        const {
+          serialNo,
+          patientName,
+          age,
+          relationship,
+          name,
+          address,
+          contactNo,
+          paymentMode,
+          referred,
+          consultancy,
+          gender,
+          admitDate,
+          servicesData,
+          netAmount,
+          lessAmount,
+        } = data[0];
+
+        const serviceRows = servicesData
+          .filter((service) => service.service != "")
+          .map(
+            (service) =>
+              `<tr><td style="padding:0px;position:relative" ><input oninput="suggestService(this)"  type="text" value="${service.service}">
+</td>
+      <td id="price" oninput="updateNetPrice()" contenteditable="true">${service.price}</td></tr>`
+          )
+          .join("");
+
+        const template = `
+    <section style="flex: 1">
+        <form id="patientRegistrationForm">
+            <h2>Patient Information</h2>
+            <div class="form-group">
+                <!-- Add the staff name field -->
+                <div class="form-group">
+                    <label for="staffName">Staff Name</label>
+                    <input type="text" id="staffName" name="staffName" oninput="this.value = this.value.toUpperCase()" required value="${name}" />
+                </div>
+                <div class="form-group" style="justify-content: unset">
+                    <label for="serialNo">S No.</label>
+                    <input type="text" id="serialNo" name="serialNo" oninput="this.value = this.value.toUpperCase()" required value="${serialNo}" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group" style="flex: 1">
+                    <label for="patientName">Patient Name</label>
+                    <input type="text" id="patientName" name="patientName" oninput="this.value = this.value.toUpperCase()" required value="${patientName}" />
+                </div>
+
+                <div class="form-group" style="width: 165px">
+                    <label for="age">Age</label>
+                    <input type="text" id="age" name="age" oninput="this.value = this.value.toUpperCase()" required style="width: 50px" value="${age}" />
+                    <select id="ageUnit" name="ageUnit">
+                        <option value="years">YR.</option>
+                        <option value="months">MON.</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <!-- Add the new gender field -->
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+                <div class="form-group relationship-section">
+                    <div class="radio-options">
+                        <input type="radio" id="son" name="relationship" value="S/O" checked required />
+                        <label for="son">S/o</label>
+
+                        <input type="radio" id="daughter" name="relationship" value="D/O" required />
+                        <label for="daughter">D/o</label>
+
+                        <input type="radio" id="wife" name="relationship" value="W/O" required />
+                        <label for="wife">W/o</label>
+                        <!-- Add the new radio option for attendant -->
+                        <input type="radio" id="attendant" name="relationship" value="ATTENDANT" required />
+                        <label for="attendant">Att.</label>
+                    </div>
+                </div>
+
+                <div class="form-group" style="flex: 1">
+                    <input type="text" id="name" name="name" placeholder="Name" oninput="this.value = this.value.toUpperCase()" required value="${name}" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="contactNo">Contact No.</label>
+                    <input type="tel" id="contactNo" name="contactNo" value="${contactNo}" />
+                </div>
+                <div class="form-group">
+                    <label for="aadharNo">Aadhaar No.</label>
+                    <input type="text" id="aadharNo" name="aadharNo" placeholder="Enter Aadhaar No." />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="consultancy">Consultancy</label>
+                    <select id="consultancy" name="consultancy">
+                        <option value=" "></option>
+                        <option value="ONLINE">Online Consultancy</option>
+                        <option value="PHYSICAL">Physical Consultancy</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1">
+                    <label for="referred">Referred</label>
+                    <input type="text" id="referred" name="referred" value="DR. SELF" placeholder="Enter referring source if any" oninput="this.value = this.value.toUpperCase()" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" oninput="this.value = this.value.toUpperCase()" required value="${address}" />
+            </div>
+
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="admitDate">Admit Date</label>
+                    <input type="date" id="admitDate" name="admitDate" oninput="this.value = this.value.toUpperCase()" />
+                </div>
+                <div class="form-group" style="border: 2px solid #007bff;color: white;padding: 10px;border-radius: 5px;">
+                    <label>Payment Mode:</label>
+                    <div class="radio-options">
+                        <input type="radio" id="cash" name="paymentMode" value="CASH" checked required />
+                        <label for="cash">Cash</label> /
+                        <input type="radio" id="ONLINE" name="paymentMode" value="ONLINE" required />
+                        <label for="ONLINE">Online</label>
+                        <!-- Add more radio options as needed -->
+                    </div>
+                </div>
+            </div>
+            <button type="submit" id="patientRegistrationSubmitBtn">Submit</button>
+        </form>
+    </section>
+
+    <section>
+        <table id="serviceTable">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${serviceRows}
+            </tbody>
+        </table>
+        <button style="margin-top: 10px" type="button" id="addRowBtn">Add Row</button>
+        <div id="totalBilling">
+            <p>Total Price: ₹ <span id="totalPrice">${netAmount}</span></p>
+        </div>
+        <div class="form-group">
+            <button id="noPaidButton" style="background-color: brown; margin-top: 5px">No Paid</button>
+            <div class="form-group" style="margin-top: 10px">
+                <label for="lessAmount">Less:</label>
+                <input type="text" id="lessAmount" name="lessAmount" placeholder="Enter Less Amount" style="background-color: antiquewhite" value="${lessAmount}" />
+            </div>
+        </div>
+    </section>`;
+
+        // Replace the existing HTML content with the filled template
+        document.getElementById("container").innerHTML = template;
+      }
+
+      // Call the function with your data object
+      fillTemplateWithData(patient);
+    </script>
+    <script src="./refund.js"></script>
+  </body>
+</html>

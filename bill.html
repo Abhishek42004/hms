@@ -13,25 +13,32 @@
         padding: 0;
         background-color: #f4f4f4;
         padding: 5px;
+        margin: 10px;
       }
 
       .invoice-container {
         background-color: #fff;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        margin: 10px;
+        min-width: 450px;
         flex: 1;
-
-        max-width: 600px;
+        max-width: 400px;
+        font-size: 12px;
+        line-height: 8px;
       }
 
       .invoice-header {
         color: #fff;
-        padding: 10px;
+        padding: 0px;
         text-align: center;
       }
 
       .invoice-header h1 {
         margin: 0;
+      }
+
+      .invoice-header img {
+        width: 65%;
+        height: 50px;
       }
 
       .invoice-details {
@@ -44,7 +51,7 @@
 
       .invoice-details p {
         margin: 2px 0;
-        font-weight: bold; /* Added bold font for better visibility */
+        /* Added bold font for better visibility */
       }
 
       .invoice-table {
@@ -62,13 +69,15 @@
 
       th,
       td {
-        padding: 8px;
+        padding: 3px;
         text-align: left;
+      }
+      td {
+        line-height: 14px;
       }
 
       .invoice-total {
-        margin-top: 10px;
-        padding: 10px;
+        padding: 6px;
         text-align: right;
       }
 
@@ -127,14 +136,14 @@
         padding: 0rem 0.5rem;
         line-height: 7px;
         height: fit-content;
-        font-size: 20px;
+        font-size: 13px;
       }
 
       @media print {
         body {
           margin: 0;
           padding: 0;
-          margin: 0.2cm;
+          margin: 0.5cm;
         }
 
         .bill-container {
@@ -155,7 +164,7 @@
 
       @page {
         size: A4;
-        margin: 0;
+        margin: 0.5cm;
       }
 
       #billContent {
@@ -172,7 +181,7 @@
 
       <!-- Add a Print button -->
       <button class="print-button" onclick="printBill()">Print</button>
-      <button class="back-button" onclick="window.location.href='/'">
+      <button class="back-button" onclick="window.location.href='./index.html'">
         Back To Home
       </button>
     </div>

@@ -190,7 +190,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Check if the patient number needs to reset for the day
     if (localStorage.getItem("lastGeneratedDate") !== formattedDate) {
-      
       localStorage.setItem("patientNumber", 1);
       console.log("patient number added");
     }
@@ -225,7 +224,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function serializeFormData() {
     // Retrieve values from the form elements
     const serialNo = document.getElementById("serialNo").value.trim();
-    const date = getCurrentDate();
+    const date = document.getElementById("date").value.trim();
+
     const patientName = document.getElementById("patientName").value.trim();
     const age = document.getElementById("age").value.trim();
     const ageUnit = document.getElementById("ageUnit").value.trim();
@@ -329,7 +329,6 @@ document.addEventListener("DOMContentLoaded", function () {
         form.querySelectorAll("input, select, textarea")
       );
       const currentInput = document.activeElement;
-
       const currentIndex = inputs.indexOf(currentInput);
       const nextIndex = (currentIndex + 1) % inputs.length;
 
@@ -354,7 +353,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Store the form data in localStorage
       if (formData) {
-        saveDataLocally(formData);
+        // Make a POST request to the backend API endpoint
+        fetch("https://puce-confused-seal.cyclic.app/api/patient", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error("Failed to upload patient data");
+          })
+          .then((data) => {
+            console.log("Patient data uploaded successfully:", data);
+            // Mark uploaded patient data as synced
+            unsyncedPatientData.forEach((patient) => {
+              patient.isSynced = true;
+            });
+            localStorage.setItem(currentDate, JSON.stringify(patientData));
+            alert("Patient data uploaded successfully!");
+          })
+          .catch((error) => {
+            console.error("Error uploading patient data:", error);
+            alert("Failed to upload patient data. Please try again later.");
+          });
+
         localStorage.setItem("formData", JSON.stringify(formData));
         event.target.reset();
         window.location.href = "./bill.html";

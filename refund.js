@@ -167,62 +167,12 @@ function getPrice(serviceInput) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  let formatDate;
   const form = document.getElementById("patientRegistrationForm");
   const checkboxes = document.querySelectorAll('input[name="services"]');
   const quantityFields = document.querySelectorAll(".quantity-field");
 
-  // function to set serial number
-  function generatePatientSerialNumber() {
-    // Get the current date
-    const currentDate = new Date();
-
-    // Extract last two digits of the year
-    const year = (currentDate.getFullYear() % 100).toString().padStart(2, "0");
-
-    // Extract month and day
-    const month = getAlphabeticRepresentation(currentDate.getMonth() + 1); // E.g., 'A' for January
-    const day = currentDate.getDate();
-
-    // Combine formatted date (YYMMD)
-    const formattedDate = day + month + year;
-    formatDate = formattedDate;
-
-    // Check if the patient number needs to reset for the day
-    if (localStorage.getItem("lastGeneratedDate") !== formattedDate) {
-      
-      localStorage.setItem("patientNumber", 1);
-      console.log("patient number added");
-    }
-
-    // Retrieve or initialize patient number
-    let patientNumber = parseInt(localStorage.getItem("patientNumber")) || 1;
-
-    // Generate serial number by combining formatted date and padded patient number
-    const serialNumber = formattedDate + "S" + padNumber(patientNumber, 3);
-
-    // Update the input field with the serial number
-    document.getElementById("serialNo").value = serialNumber;
-  }
-
-  // Convert numerical representation to corresponding alphabet (1 -> A, 2 -> B, etc.)
-  function getAlphabeticRepresentation(number) {
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    return alphabet[number - 1] || ""; // Return empty string for out-of-bounds values
-  }
-
-  // Pad a number to a specified width with leading zeros
-  function padNumber(number, width) {
-    const paddedNumber = number.toString().padStart(width, "0");
-    return paddedNumber.length > width
-      ? paddedNumber.slice(-width)
-      : paddedNumber;
-  }
-
-  // Example Usage:
-  const serialNumber = generatePatientSerialNumber();
-
   function serializeFormData() {
+    console.log("serialize 1");
     // Retrieve values from the form elements
     const serialNo = document.getElementById("serialNo").value.trim();
     const date = getCurrentDate();
@@ -248,11 +198,13 @@ document.addEventListener("DOMContentLoaded", function () {
       "#serviceTable tbody tr"
     );
     const servicesData = [];
+
     servicesTableRows.forEach((row) => {
       const serviceInput = row.querySelector("td:first-child input");
       const service = serviceInput.value.trim();
       const priceCell = row.querySelector("td:last-child");
       const price = priceCell.textContent.trim() || 0;
+
       servicesData.push({ service, price });
     });
 
@@ -271,11 +223,10 @@ document.addEventListener("DOMContentLoaded", function () {
         : parseFloat(netAmountElement.innerText.trim());
 
     // Retrieve or initialize patient number
-    let patientNumber = parseInt(localStorage.getItem("patientNumber")) || 1;
+
     let time = getCurrentTime();
     console.log(time);
     // Increment and update patient number for the next registration
-    localStorage.setItem("patientNumber", patientNumber + 1);
 
     // Return the serialized data
     return {
@@ -354,12 +305,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Store the form data in localStorage
       if (formData) {
-        saveDataLocally(formData);
-        localStorage.setItem("formData", JSON.stringify(formData));
+        processRefund(formData);
+
         event.target.reset();
         window.location.href = "./bill.html";
       }
     });
+
+  // Function to update patient data in local storage after refund
+  function processRefund(data) {
+    console.log(data);
+    let serialNo = document.getElementById("serialNo").value;
+    let currentDate = new Date().toISOString().split("T")[0];
+    let patientDataArray = JSON.parse(localStorage.getItem(currentDate)) || [];
+
+    // Find patient in local storage and update data
+    for (let i = 0; i < patientDataArray.length; i++) {
+      if (patientDataArray[i].serialNo === serialNo) {
+        // Update patient data with form values
+
+        patientDataArray[i].servicesData = data.servicesData;
+        patientDataArray[i].netAmount = data.netAmount;
+        patientDataArray[i].totalAmount = data.totalAmount;
+        patientDataArray[i].lessAmount = data.lessAmount
+        localStorage.setItem("formData", JSON.stringify(patientDataArray[i]));
+
+        // // Update local storage with modified patient data
+        localStorage.setItem(currentDate, JSON.stringify(patientDataArray));
+
+        return; // Exit loop once patient is found and updated
+      }
+    }
+
+    // If patient with given serial number is not found
+    alert("Patient not found in local storage!");
+  }
 
   // Function to save data locally based on the mechanism
   function saveDataLocally(formData) {
@@ -368,11 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Check if there is data for the current working day in local storage
     if (!localStorage.getItem(currentDate)) {
       // Clear the entire local storage
-
       localStorage.clear();
-      localStorage.setItem("patientNumber", 2);
-      localStorage.setItem("lastGeneratedDate", formatDate);
-
       // Create a new entry for the current working day
       const newPatientList = [formData];
       // Save the new data to local storage
@@ -418,7 +394,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("lessAmount").addEventListener("input", function () {
     updateNetPrice(); // Update total price when the "Less" amount changes
   });
-  generatePatientSerialNumber();
 
   const tableBody = document.querySelector("#serviceTable tbody");
 
@@ -431,15 +406,6 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     tableBody.appendChild(newRow);
   }
-
-  function callFunctionNTimes(n) {
-    if (n > 0) {
-      addRow();
-      callFunctionNTimes(n - 1);
-    }
-  }
-
-  callFunctionNTimes(8);
 
   document.getElementById("addRowBtn").addEventListener("click", addRow);
 });

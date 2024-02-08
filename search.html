@@ -22,7 +22,7 @@
         background-color: white;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
-        overflow: hidden;
+        
       }
 
       header {
@@ -88,9 +88,20 @@
         background-color: #e0e0e0;
       }
     </style>
+    <link rel="stylesheet" href="./navbar.css" />
   </head>
   <body>
     <main>
+      <div class="navbar">
+        <div class="logo">Maheshwari Clinic</div>
+        <ul class="nav-list">
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./dailyReport.html">Report</a></li>
+          <li><a href="./medi.html">Medical</a></li>
+          <li><a href="./oldPatients.html">Old</a></li>
+        </ul>
+        <div class="burger-menu">&#9776;</div>
+      </div>
       <header>Patient Record Search</header>
 
       <form id="searchForm">
@@ -129,7 +140,6 @@
             <th>Contact No</th>
             <th>Services Opted</th>
 
-            
             <th>Visit Date</th>
             <th>Relationship</th>
             <th>Address</th>
@@ -177,9 +187,8 @@
 
       // Function to update the patient table with the provided data
       function updatePatientTable(searchResults) {
-        
         const tableBody = document.getElementById("patientTableBody");
-        tableBody.innerHTML = ""
+        tableBody.innerHTML = "";
         function formatDateTime(mongoDBDate) {
           const date = new Date(mongoDBDate);
 

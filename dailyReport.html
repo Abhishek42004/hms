@@ -16,14 +16,14 @@
       header {
         background-color: #333;
         color: white;
-        padding: 10px;
+        padding: 5px;
         text-align: center;
       }
 
       .container {
         max-width: 800px;
         margin: 20px auto;
-        padding: 20px;
+        padding: 10px;
         background-color: white;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border-radius: 5px;
@@ -86,7 +86,7 @@
       /* Style for the summary section */
       #summarySection {
         margin-top: 20px;
-        padding: 20px;
+        padding: 10px;
         background-color: #f8f8f8;
         border: 1px solid #ddd;
         border-radius: 5px;
@@ -124,6 +124,87 @@
         background-color: #e0e0e0;
       }
 
+      /* Refund window styles */
+      .refund-window {
+        display: none;
+
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: bisque;
+        border: 1px solid #ccc;
+        z-index: 999;
+        width: 300px; /* Adjust the width as needed */
+      }
+
+      .refund-window h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .refund-window p {
+        margin-bottom: 8px;
+      }
+
+      .refund-window label {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .refund-window input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+      }
+
+      .refund-window button {
+        background-color: #4caf50;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .refund-window button:hover {
+        background-color: #45a049;
+      }
+
+      /* Close button styles */
+      .refund-window .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(255, 0, 0, 0.729);
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        float: right;
+      }
+
+      .refund-window .close-button:hover {
+        background-color: #aaa;
+      }
+
+      .print-button {
+        display: none;
+      }
+
+      .upload-button {
+        position: absolute;
+        top: 2rem;
+        padding: 0.5rem 1rem;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        right: 15px;
+        font-weight: bold;
+      }
+
       /* Responsive summary table */
       @media (max-width: 600px) {
         #summaryTable {
@@ -135,7 +216,8 @@
           padding: 8px;
         }
       }
-      td,th {
+      td,
+      th {
         line-height: 15px;
       }
       @media print {
@@ -181,10 +263,21 @@
       .print-button:hover {
         background-color: #27ae60;
       }
+      .refund_btn {
+        background-color: rgb(225, 52, 52);
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 3px;
+        border-radius: 5px;
+      }
     </style>
   </head>
   <body>
-   <button class="print-button" onclick="printBill()">Print</button>
+    <button class="print-button" onclick="printBill()">Print</button>
+    <button class="upload-button" onclick="uploadUnsyncedPatientData()">
+      Upload Patient Data
+    </button>
     <div class="container">
       <div id="summarySection">
         <div id="summaryTitle">Summary for the Day</div>
@@ -199,9 +292,9 @@
           <tbody>
             <!-- Insert dynamic summary data here -->
             <tr>
-              <td>2024-01-10</td>
-              <td>10</td>
-              <td>₹15,000.00</td>
+              <td id="currentDate">Loading ....</td>
+              <td id="totalPatients">Loading....</td>
+              <td id="totalCollection">Loading......</td>
             </tr>
             <!-- Add more rows as needed -->
           </tbody>
@@ -216,7 +309,8 @@
               <th>Visited Time</th>
               <th>Reffered</th>
               <th>Services Opted</th>
-              <th>Total </th>
+              <th>Total</th>
+              <th>Refund</th>
             </tr>
           </thead>
           <tbody id="patientTableBody">
@@ -224,161 +318,118 @@
           </tbody>
         </table>
       </div>
+      <!-- Refund window -->
+      <div id="refundWindow" class="refund-window">
+        <h2 id="refundTitle">Refund Details</h2>
+
+        <!-- Display patient information or any relevant details -->
+        <p>Patient Name: <span id="refundPatientName">Loading...</span></p>
+        <p>Total Amount: ₹<span id="refundTotalAmount">Loading...</span></p>
+
+        <!-- Refund form -->
+        <form id="refundForm">
+          <label for="refundAmount">Refund Amount:</label>
+          <input type="text" id="refundAmount" name="refundAmount" required />
+
+          <!-- Add any other refund-related fields as needed -->
+
+          <button type="button" onclick="processRefund()">
+            Process Refund
+          </button>
+        </form>
+
+        <button class="close-button" onclick="closeRefundWindow()">
+          Close
+        </button>
+      </div>
     </div>
 
     <script>
-      // Sample patient data with total amount paid and services opted
-      const samplePatientData = [
-        {
-          serialNo: "S001",
-          patientName: "Ravi Kumar",
-          age: 40,
-          gender: "Male",
-          visitedDate: "2024-01-08",
-          visitedTime: "09:30:00 AM",
-          totalAmountPaid: 1200,
-          referred: "Dr. Smith",
-          servicesOpted: [
-            { service: "X-ray", quantity: 2, price: 400 },
-            { service: "ECG", quantity: 1, price: 400 },
-            { service: "Consultancy", quantity: 1, price: 200 },
-          ],
-        },
-        {
-          serialNo: "S002",
-          patientName: "Priya Sharma",
-          age: 32,
-          gender: "Female",
-          visitedDate: "2024-01-08",
-          visitedTime: "10:15:00 AM",
-          totalAmountPaid: 1500,
-          referred: "Dr. Johnson",
-          servicesOpted: [
-            { service: "USG", quantity: 1, price: 1000 },
-            { service: "Lab", quantity: 1, price: 200 },
-          ],
-        },
-        {
-          serialNo: "S003",
-          patientName: "Amit Patel",
-          age: 45,
-          gender: "Male",
-          visitedDate: "2024-01-08",
-          visitedTime: "11:00:00 AM",
-          totalAmountPaid: 800,
-          referred: "Dr. Brown",
-          servicesOpted: [
-            { service: "ECG", quantity: 1, price: 400 },
-            { service: "Consultancy", quantity: 1, price: 200 },
-          ],
-        },
-        {
-          serialNo: "S004",
-          patientName: "Sneha Kapoor",
-          age: 28,
-          gender: "Female",
-          visitedDate: "2024-01-08",
-          visitedTime: "11:45:00 AM",
-          totalAmountPaid: 700,
-          referred: "Dr. Miller",
-          servicesOpted: [
-            { service: "X-ray", quantity: 1, price: 400 },
-            { service: "Consultancy", quantity: 1, price: 200 },
-          ],
-        },
-        {
-          serialNo: "S005",
-          patientName: "Rahul Sharma",
-          age: 35,
-          gender: "Male",
-          visitedDate: "2024-01-08",
-          visitedTime: "12:30:00 PM",
-          totalAmountPaid: 1800,
-          referred: "Dr. Davis",
-          servicesOpted: [
-            { service: "USG", quantity: 2, price: 1000 },
-            { service: "X-ray", quantity: 1, price: 400 },
-          ],
-        },
-        {
-          serialNo: "S006",
-          patientName: "Neha Gupta",
-          age: 30,
-          gender: "Female",
-          visitedDate: "2024-01-08",
-          visitedTime: "01:15:00 PM",
-          totalAmountPaid: 1000,
-          referred: "Dr. Wilson",
-          servicesOpted: [
-            { service: "Lab", quantity: 1, price: 200 },
-            { service: "ECG", quantity: 1, price: 400 },
-          ],
-        },
-        {
-          serialNo: "S007",
-          patientName: "Vikas Verma",
-          age: 50,
-          gender: "Male",
-          visitedDate: "2024-01-08",
-          visitedTime: "02:00:00 PM",
-          totalAmountPaid: 1300,
-          referred: "Dr. Anderson",
-          servicesOpted: [
-            { service: "USG", quantity: 1, price: 1000 },
-            { service: "ECG", quantity: 1, price: 400 },
-          ],
-        },
-        {
-          serialNo: "S008",
-          patientName: "Anita Singh",
-          age: 38,
-          gender: "Female",
-          visitedDate: "2024-01-08",
-          visitedTime: "02:45:00 PM",
-          totalAmountPaid: 900,
-          referred: "Dr. Thomas",
-          servicesOpted: [
-            { service: "X-ray", quantity: 1, price: 400 },
-            { service: "Consultancy", quantity: 1, price: 200 },
-          ],
-        },
-        {
-          serialNo: "S009",
-          patientName: "Rajesh Kumar",
-          age: 42,
-          gender: "Male",
-          visitedDate: "2024-01-08",
-          visitedTime: "03:30:00 PM",
-          totalAmountPaid: 1600,
-          referred: "Dr. White",
-          servicesOpted: [
-            { service: "Lab", quantity: 2, price: 200 },
-            { service: "USG", quantity: 1, price: 1000 },
-          ],
-        },
-        {
-          serialNo: "S010",
-          patientName: "Sunita Devi",
-          age: 55,
-          gender: "Female",
-          visitedDate: "2024-01-08",
-          visitedTime: "04:15:00 PM",
-          totalAmountPaid: 1100,
-          referred: "Dr. Garcia",
-          servicesOpted: [
-            { service: "Consultancy", quantity: 1, price: 200 },
-            { service: "ECG", quantity: 1, price: 400 },
-          ],
-        },
-      ];
+      // Function to upload unsynced patient data to the backend API
+      function uploadUnsyncedPatientData() {
+        const currentDate = new Date().toISOString().split("T")[0];
+        let patientData = JSON.parse(localStorage.getItem(currentDate)) || [];
 
-        // Implement other necessary functions as needed
-    // Function to print the bill
-    window.printBill = function () {
+        // Filter out already synced patients
+        const unsyncedPatientData = patientData.filter(
+          (patient) => !patient.isSynced
+        );
+
+        // Check if there are unsynced patient data
+        if (unsyncedPatientData.length === 0) {
+          alert("All patient data has already been synced.");
+          return;
+        }
+
+        // Make a POST request to the backend API endpoint
+        fetch("https://puce-confused-seal.cyclic.app/api/patients/bulk", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(unsyncedPatientData),
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error("Failed to upload patient data");
+          })
+          .then((data) => {
+            console.log("Patient data uploaded successfully:", data);
+            // Mark uploaded patient data as synced
+            unsyncedPatientData.forEach((patient) => {
+              patient.isSynced = true;
+            });
+            localStorage.setItem(currentDate, JSON.stringify(patientData));
+            alert("Patient data uploaded successfully!");
+          })
+          .catch((error) => {
+            console.error("Error uploading patient data:", error);
+            alert("Failed to upload patient data. Please try again later.");
+          });
+      }
+      // Function to open refund window and fetch details based on serial number
+      function openRefundWindow(serialNumber) {
+        let serialNum = serialNumber.id;
+        let currentDate = new Date().toISOString().split("T")[0];
+        const patientDataArray =
+          JSON.parse(localStorage.getItem(currentDate)) || [];
+        const patientData = patientDataArray.find(
+          (patient) => patient.serialNo === serialNum
+        );
+
+        // Populate details in the refund window
+        document.getElementById("refundPatientName").textContent =
+          patientData.patientName;
+        document.getElementById("refundTotalAmount").textContent =
+          patientData.netAmount;
+        document.getElementById(
+          "refundTitle"
+        ).textContent = `Refund Details - ${serialNum}`;
+
+        // Display the refund window
+        document.getElementById("refundWindow").style.display = "block";
+      }
+
+      window.printBill = function () {
         window.print();
-    };
+      };
+
+      // Function to close refund window
+      function closeRefundWindow() {
+        document.getElementById("refundWindow").style.display = "none";
+      }
+
+      // Event listener for Enter key press
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          printBill();
+        }
+      });
       // Function to populate the patient table
       function populatePatientTable(data) {
+        console.log(data);
         const patientTableBody = document.getElementById("patientTableBody");
 
         // Clear existing table rows
@@ -387,26 +438,47 @@
         // Iterate through patient data and create table rows
         data.forEach((patient) => {
           const row = document.createElement("tr");
-          const servicesOpted = patient.servicesOpted
-            .map((service) => `${service.quantity} ${service.service}`)
+          const servicesOpted = patient.servicesData
+            .filter((service) => service.service != "")
+            .map((service) => `${service.service}`)
             .join(", ");
 
           row.innerHTML = `
       <td>${patient.serialNo}</td>
       <td>${patient.patientName}</td>
-      <td>${patient.age}</td>
+      <td>${patient.age.substring(0, 4).toUpperCase()}</td>
       <td>${patient.gender.charAt(0).toUpperCase()}</td>
-      <td>${patient.visitedTime}</td>
+      <td>${patient.time ? patient.time.toUpperCase() : ""}</td>
       <td>${patient.referred}</td>
       <td>${servicesOpted}</td>
-      <td>₹${patient.totalAmountPaid.toFixed(2)}</td>
+      <td>₹${patient.netAmount.toFixed(2)}</td>
+      <td><a href="/refund.html?sNo=${patient.serialNo}" id="${
+            patient.serialNo
+          }" class="refund_btn" ">Refund</a></td>
     `;
           patientTableBody.appendChild(row);
         });
       }
+      const currentDate = new Date().toISOString().split("T")[0];
+      let patientData;
+      if (localStorage.getItem(currentDate)) {
+        patientData = JSON.parse(localStorage.getItem(currentDate));
+      }
+      // Calculate total patients
+      const totalPatients = patientData.length;
 
+      // Calculate total collection
+      const totalCollection = patientData.reduce(
+        (sum, patient) => sum + patient.netAmount,
+        0
+      );
+      // Update the HTML with the calculated data
+      document.getElementById("totalPatients").textContent = totalPatients;
+      document.getElementById("totalCollection").textContent = `₹ 
+ ${totalCollection}`;
+      document.getElementById("currentDate").textContent = currentDate;
       // Call the function with the sample data
-      populatePatientTable(samplePatientData);
+      populatePatientTable(patientData);
     </script>
   </body>
 </html>

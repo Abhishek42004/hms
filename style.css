@@ -6,10 +6,9 @@ body {
   padding: 0;
 }
 
-
 .navbar {
   background-color: #333;
-  padding:0px 15px;
+  padding: 0px 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -165,7 +164,7 @@ form h2 {
   overflow-y: auto; /* Enable scrolling if needed */
 
   gap: 20px;
- display: flex;
+  display: flex;
 }
 
 form {
@@ -390,6 +389,8 @@ tr td:nth-child(1) {
   width: 500px;
   background-color: bisque;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  max-width: 350px;
+  max-height: 400px;
 }
 .suggestion {
   padding: 8px;
