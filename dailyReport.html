@@ -194,7 +194,7 @@
 
       .upload-button {
         position: absolute;
-        top: 2rem;
+        top: 5rem;
         padding: 0.5rem 1rem;
         background-color: #000;
         color: #fff;
@@ -227,8 +227,13 @@
           margin: 0.2cm;
         }
 
+
         .bill-container {
           border: none;
+        }
+
+        .navbar{
+          display: none;
         }
 
         header,
@@ -272,8 +277,19 @@
         border-radius: 5px;
       }
     </style>
+    <link rel="stylesheet" href="./navbar.css">
   </head>
   <body>
+    <div class="navbar">
+      <div class="logo">Maheshwari Clinic</div>
+      <ul class="nav-list">
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./search.html">Search</a></li>
+       <li><a href="./medi.html">Medical</a></li>
+        <li><a href="./oldPatient.html">Old</a></li>
+      </ul>
+      <div class="burger-menu">&#9776;</div>
+    </div>
     <button class="print-button" onclick="printBill()">Print</button>
     <button class="upload-button" onclick="uploadUnsyncedPatientData()">
       Upload Patient Data
@@ -452,7 +468,7 @@
       <td>${patient.referred}</td>
       <td>${servicesOpted}</td>
       <td>₹${patient.netAmount.toFixed(2)}</td>
-      <td><a href="./refund.html?sNo=${patient.serialNo}" id="${
+      <td><a href="/refund.html?sNo=${patient.serialNo}" id="${
             patient.serialNo
           }" class="refund_btn" ">Refund</a></td>
     `;

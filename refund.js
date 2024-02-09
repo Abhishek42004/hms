@@ -88,6 +88,10 @@ function suggestService(cell) {
     "LFT",
     "RFT",
     "BLOOD GROUP",
+    "X-RAY CHEST AP",
+    "X-RAY CHEST PA",
+    "X-RAY CERVICAL AP VIEW",
+    "X-RAY CERVICAL LAT VIEW",
   ];
   const suggestionsContainer = createSuggestionsContainer();
   console.log(suggestionsContainer);
@@ -327,7 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
         patientDataArray[i].servicesData = data.servicesData;
         patientDataArray[i].netAmount = data.netAmount;
         patientDataArray[i].totalAmount = data.totalAmount;
-        patientDataArray[i].lessAmount = data.lessAmount
+        patientDataArray[i].lessAmount = data.lessAmount;
         localStorage.setItem("formData", JSON.stringify(patientDataArray[i]));
 
         // // Update local storage with modified patient data

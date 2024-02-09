@@ -88,6 +88,10 @@ function suggestService(cell) {
     "LFT",
     "RFT",
     "BLOOD GROUP",
+    "X-RAY CHEST AP",
+    "X-RAY CHEST PA",
+    "X-RAY CERVICAL AP VIEW",
+    "X-RAY CERVICAL LAT VIEW"
   ];
   const suggestionsContainer = createSuggestionsContainer();
   console.log(suggestionsContainer);

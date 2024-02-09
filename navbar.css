@@ -65,3 +65,35 @@
     display: block;
   }
 }
+
+
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    margin: 0.5cm;
+  }
+
+  .bill-container {
+    border: none;
+  }
+.navbar{
+  display: none;
+}
+
+  header,
+  footer,
+  nav,
+  aside {
+    display: none;
+  }
+
+  button {
+    display: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 0.5cm;
+}

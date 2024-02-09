@@ -22,7 +22,6 @@
         background-color: white;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
-        
       }
 
       header {
@@ -89,6 +88,7 @@
       }
     </style>
     <link rel="stylesheet" href="./navbar.css" />
+    <script src="./admin.js"></script>
   </head>
   <body>
     <main>
@@ -189,28 +189,6 @@
       function updatePatientTable(searchResults) {
         const tableBody = document.getElementById("patientTableBody");
         tableBody.innerHTML = "";
-        function formatDateTime(mongoDBDate) {
-          const date = new Date(mongoDBDate);
-
-          // Format the date
-          const optionsDate = {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-          };
-          const formattedDate = date.toLocaleDateString("en-US", optionsDate);
-
-          // Format the time
-          const optionsTime = {
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-            hour12: true,
-          };
-          const formattedTime = date.toLocaleTimeString("en-US", optionsTime);
-
-          return `${formattedDate} ${formattedTime}`;
-        }
 
         // Check if the searchResults array is empty
         if (searchResults.length === 0) {
@@ -224,8 +202,6 @@
         // Loop through the search results and add rows to the table
         searchResults.forEach((patientData) => {
           // Example usage
-          const mongoDBDate = patientData.date;
-          patientData.date = formatDateTime(mongoDBDate);
 
           // Create a new row for the patient
           const newRow = document.createElement("tr");
@@ -241,7 +217,7 @@
       .join(", ")}</td>
     
     
-    <td>${patientData.date}</td>
+    <td>${patientData.date}  ||  ${patientData.time}</td>
     <td>${patientData.relationship} - ${patientData.name} </td>
     <td>${patientData.address}</td>
     <td>${patientData.referred}</td>

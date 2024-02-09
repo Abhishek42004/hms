@@ -88,6 +88,10 @@ function suggestService(cell) {
     "LFT",
     "RFT",
     "BLOOD GROUP",
+    "X-RAY CHEST AP",
+    "X-RAY CHEST PA",
+    "X-RAY CERVICAL AP VIEW",
+    "X-RAY CERVICAL LAT VIEW",
   ];
   const suggestionsContainer = createSuggestionsContainer();
   console.log(suggestionsContainer);
@@ -190,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Check if the patient number needs to reset for the day
     if (localStorage.getItem("lastGeneratedDate") !== formattedDate) {
-      localStorage.setItem("patientNumber", 1);
+      // localStorage.setItem("patientNumber", 1);
       console.log("patient number added");
     }
 
@@ -275,7 +279,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let time = getCurrentTime();
     console.log(time);
     // Increment and update patient number for the next registration
-    localStorage.setItem("patientNumber", patientNumber + 1);
+    // localStorage.setItem("patientNumber", patientNumber + 1);
 
     // Return the serialized data
     return {
@@ -369,11 +373,7 @@ document.addEventListener("DOMContentLoaded", function () {
           })
           .then((data) => {
             console.log("Patient data uploaded successfully:", data);
-            // Mark uploaded patient data as synced
-            unsyncedPatientData.forEach((patient) => {
-              patient.isSynced = true;
-            });
-            localStorage.setItem(currentDate, JSON.stringify(patientData));
+
             alert("Patient data uploaded successfully!");
           })
           .catch((error) => {
@@ -386,34 +386,6 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "./bill.html";
       }
     });
-
-  // Function to save data locally based on the mechanism
-  function saveDataLocally(formData) {
-    const currentDate = new Date().toISOString().split("T")[0];
-    console.log(currentDate);
-    // Check if there is data for the current working day in local storage
-    if (!localStorage.getItem(currentDate)) {
-      // Clear the entire local storage
-
-      localStorage.clear();
-      localStorage.setItem("patientNumber", 2);
-      localStorage.setItem("lastGeneratedDate", formatDate);
-
-      // Create a new entry for the current working day
-      const newPatientList = [formData];
-      // Save the new data to local storage
-      localStorage.setItem(currentDate, JSON.stringify(newPatientList));
-    } else {
-      // Update existing data for the current day
-      let currentDayData = JSON.parse(localStorage.getItem(currentDate));
-
-      // Add the new patient information to the existing data
-      currentDayData.push(formData);
-
-      // Save the updated data back to local storage
-      localStorage.setItem(currentDate, JSON.stringify(currentDayData));
-    }
-  }
 
   function getCurrentTime() {
     const now = new Date();
