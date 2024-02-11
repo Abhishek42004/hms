@@ -205,6 +205,10 @@
         font-weight: bold;
       }
 
+      a {
+        text-decoration: none;
+      }
+
       /* Responsive summary table */
       @media (max-width: 600px) {
         #summaryTable {
@@ -227,12 +231,11 @@
           margin: 0.2cm;
         }
 
-
         .bill-container {
           border: none;
         }
 
-        .navbar{
+        .navbar {
           display: none;
         }
 
@@ -277,7 +280,7 @@
         border-radius: 5px;
       }
     </style>
-    <link rel="stylesheet" href="./navbar.css">
+    <link rel="stylesheet" href="./navbar.css" />
   </head>
   <body>
     <div class="navbar">
@@ -285,7 +288,7 @@
       <ul class="nav-list">
         <li><a href="./index.html">Home</a></li>
         <li><a href="./search.html">Search</a></li>
-       <li><a href="./medi.html">Medical</a></li>
+        <li><a href="./medi.html">Medical</a></li>
         <li><a href="./oldPatient.html">Old</a></li>
       </ul>
       <div class="burger-menu">&#9776;</div>
@@ -302,7 +305,8 @@
             <tr>
               <th>Date</th>
               <th>Total Patients</th>
-              <th>Total Amount Collected</th>
+              <th>Total Cash Collection</th>
+              <th>Total Online Collection</th>
             </tr>
           </thead>
           <tbody>
@@ -310,7 +314,8 @@
             <tr>
               <td id="currentDate">Loading ....</td>
               <td id="totalPatients">Loading....</td>
-              <td id="totalCollection">Loading......</td>
+              <td id="totalCashCollection">Loading......</td>
+              <td id="totalOnlineCollection">Loading......</td>
             </tr>
             <!-- Add more rows as needed -->
           </tbody>
@@ -325,6 +330,7 @@
               <th>Visited Time</th>
               <th>Reffered</th>
               <th>Services Opted</th>
+              <th>Mode</th>
               <th>Total</th>
               <th>Refund</th>
             </tr>
@@ -365,18 +371,15 @@
       function uploadUnsyncedPatientData() {
         const currentDate = new Date().toISOString().split("T")[0];
         let patientData = JSON.parse(localStorage.getItem(currentDate)) || [];
-
         // Filter out already synced patients
         const unsyncedPatientData = patientData.filter(
           (patient) => !patient.isSynced
         );
-
         // Check if there are unsynced patient data
         if (unsyncedPatientData.length === 0) {
           alert("All patient data has already been synced.");
           return;
         }
-
         // Make a POST request to the backend API endpoint
         fetch("https://puce-confused-seal.cyclic.app/api/patients/bulk", {
           method: "POST",
@@ -460,18 +463,23 @@
             .join(", ");
 
           row.innerHTML = `
-      <td>${patient.serialNo}</td>
-      <td>${patient.patientName}</td>
-      <td>${patient.age.substring(0, 4).toUpperCase()}</td>
-      <td>${patient.gender.charAt(0).toUpperCase()}</td>
-      <td>${patient.time ? patient.time.toUpperCase() : ""}</td>
-      <td>${patient.referred}</td>
-      <td>${servicesOpted}</td>
-      <td>₹${patient.netAmount.toFixed(2)}</td>
-      <td><a href="/refund.html?sNo=${patient.serialNo}" id="${
+        <td>${patient.serialNo}</td>
+        <td>${patient.patientName}</td>
+        <td>${patient.age.substring(0, 4).toUpperCase()}</td>
+        <td>${patient.gender.charAt(0).toUpperCase()}</td>
+        <td>${patient.time ? patient.time.toUpperCase() : ""}</td>
+        <td>${patient.referred}</td>
+        <td>${servicesOpted}</td>
+        <td>${patient.paymentMode}</td>
+        <td>${
+          patient.netAmount === "NO PAID"
+            ? "NO PAID"
+            : `₹${patient.netAmount.toFixed(2)}`
+        }</td>
+        <td><a href="/refund.html?sNo=${patient.serialNo}" id="${
             patient.serialNo
           }" class="refund_btn" ">Refund</a></td>
-    `;
+      `;
           patientTableBody.appendChild(row);
         });
       }
@@ -480,18 +488,35 @@
       if (localStorage.getItem(currentDate)) {
         patientData = JSON.parse(localStorage.getItem(currentDate));
       }
+      console.log(patientData);
       // Calculate total patients
       const totalPatients = patientData.length;
 
-      // Calculate total collection
-      const totalCollection = patientData.reduce(
-        (sum, patient) => sum + patient.netAmount,
-        0
-      );
+      // Initialize variables to store total collection for each payment mode
+      let totalCashCollection = 0;
+      let totalOnlineCollection = 0;
+
+      // Iterate through patient data to calculate totals
+      patientData.forEach((patient) => {
+        if (patient.paymentMode === "CASH") {
+          if (patient.netAmount != "NO PAID") {
+            totalCashCollection += patient.netAmount;
+          }
+        } else if (patient.paymentMode === "ONLINE") {
+          if (patient.netAmount != "NO PAID") {
+            totalOnlineCollection += patient.netAmount;
+          }
+        }
+      });
       // Update the HTML with the calculated data
       document.getElementById("totalPatients").textContent = totalPatients;
-      document.getElementById("totalCollection").textContent = `₹ 
- ${totalCollection}`;
+      // Update the HTML with the calculated data
+      document.getElementById(
+        "totalCashCollection"
+      ).textContent = `₹ ${totalCashCollection.toFixed(2)}`;
+      document.getElementById(
+        "totalOnlineCollection"
+      ).textContent = `₹ ${totalOnlineCollection.toFixed(2)}`;
       document.getElementById("currentDate").textContent = currentDate;
       // Call the function with the sample data
       populatePatientTable(patientData);

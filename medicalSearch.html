@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Patient Record Search</title>
+    <title>Medical Record Search</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -88,7 +88,6 @@
       }
     </style>
     <link rel="stylesheet" href="./navbar.css" />
-    <script src="./admin.js"></script>
   </head>
   <body>
     <main>
@@ -102,20 +101,13 @@
         </ul>
         <div class="burger-menu">&#9776;</div>
       </div>
-      <header>Patient Record Search</header>
+      <header>Medical Record Search</header>
 
       <form id="searchForm">
         <select id="searchProperty" name="searchProperty">
           <option value="patientName">Patient Name</option>
-          <option value="serialNo">Serial No.</option>
-          <option value="date">Visit Date</option>
-          <option value="age">Age</option>
-          <option value="name">Relative Name</option>
-          <option value="address">Adress</option>
-          <option value="contactNo">Contact No.</option>
-          <option value="referred">Referred</option>
-          <option value="gender">Gender</option>
-
+          <option value="diagnosis">Diagnosis</option>
+          <option value="treatmentStartDate">Treatment Start Date</option>
           <!-- Add more options as needed -->
         </select>
 
@@ -124,120 +116,68 @@
           type="text"
           id="searchInput"
           name="searchInput"
-          placeholder="Enter (Name) , ( data - 2024-02-11) , ( phone number) , (age - 50 years) "
+          placeholder="Enter search criteria"
         />
 
         <button type="button" onclick="searchRecords()">Search</button>
       </form>
 
-      <table id="patientTable">
+      <table id="medicalTable">
         <thead>
           <tr>
-            <th>Serial No</th>
+            <th>Issue</th>
             <th>Patient Name</th>
+            <th>Diagnosis</th>
+            <th>Treatment Start Date</th>
             <th>Age</th>
             <th>Gender</th>
-            <th>Contact No</th>
-            <th>Services Opted</th>
-
-            <th>Visit Date</th>
-            <th>Relationship</th>
-            <th>Address</th>
-            <th>Referred</th>
-            <th>Consultancy</th>
-            <th>Admit Date</th>
-            <th>Total</th>
-            <th>Less</th>
-            <th>Net Amount</th>
+            <!-- Add more table headers as needed -->
           </tr>
         </thead>
-        <tbody id="patientTableBody">
+        <tbody id="medicalTableBody">
           <!-- Data rows will be dynamically added here -->
         </tbody>
       </table>
     </main>
     <script src="./indexedDb.js"></script>
     <script>
-      // Sample function to simulate searching records
-      // Function to send a GET request to search patient records
       function searchRecords() {
-        // Get the selected search property and search input value
         const searchProperty = document.getElementById("searchProperty").value;
         const searchInput = document.getElementById("searchInput").value;
 
-        // Construct the URL for the search request
-        // const searchUrl = `https://puce-confused-seal.cyclic.app/api/patient/search?${searchProperty}=${encodeURIComponent(
-        //   searchInput
-        // )}`;
-
-        // Fetch API to send a GET request to the backend
-        // fetch(searchUrl)
-        //   .then((response) => response.json())
-        //   .then((data) => {
-        //     console.log(data);
-        //     // Call a function to update the table with the search results
-
-        //     updatePatientTable(data);
-        //   })
-        //   .catch((error) => {
-        //     console.error("Error:", error);
-        //     alert("Failed to fetch patient data. Please try again.");
-        //   });
         hospitalDB
-          .searchPatients(searchInput)
-          .then((patients) => {
-            console.log("Patients:", patients);
-            updatePatientTable(patients);
+          .searchMedicalData(searchInput)
+          .then((medicalData) => {
+            updateMedicalTable(medicalData);
           })
           .catch((error) => {
             console.error(error);
           });
       }
 
-      // Function to update the patient table with the provided data
-      function updatePatientTable(searchResults) {
-        const tableBody = document.getElementById("patientTableBody");
+      function updateMedicalTable(medicalData) {
+        const tableBody = document.getElementById("medicalTableBody");
         tableBody.innerHTML = "";
 
-        // Check if the searchResults array is empty
-        if (searchResults.length === 0) {
+        if (medicalData.length === 0) {
           const emptyRow = document.createElement("tr");
           emptyRow.innerHTML =
-            '<td colspan="15">No matching records found.</td>';
+            '<td colspan="3">No matching records found.</td>';
           tableBody.appendChild(emptyRow);
           return;
         }
 
-        // Loop through the search results and add rows to the table
-        searchResults.forEach((patientData) => {
-          // Example usage
-
-          // Create a new row for the patient
+        medicalData.forEach((record) => {
           const newRow = document.createElement("tr");
           newRow.innerHTML = `
-          <td>${patientData.serialNo}</td>
-      <td>${patientData.patientName}</td>
-    <td>${patientData.age}</td>
-    <td>${patientData.gender}</td>
-    <td>${patientData.contactNo}</td>
-    <td>${patientData.servicesData
-      .filter((service) => service.service != "")
-      .map((service) => service.service)
-      .join(", ")}</td>
-    
-    
-    <td>${patientData.date}  ||  ${patientData.time}</td>
-    <td>${patientData.relationship} - ${patientData.name} </td>
-    <td>${patientData.address}</td>
-    <td>${patientData.referred}</td>
-    <td>${patientData.consultancy}</td>
-    <td>${patientData.admitDate}</td>
-    <td>${patientData.totalAmount}</td>
-    <td>${patientData.lessAmount}</td>
-    <td>${patientData.netAmount}</td>
-      `;
-
-          // Append the new row to the table body
+          <td>${record.issueDate}</td>
+          <td>${record.patientName}</td>
+          <td>${record.diagnosis}</td>
+          <td>${record.treatmentStartDate}</td>
+          <td>${record.age}</td>
+          <td>${record.gender}</td>
+          <!-- Add more table cells as needed -->
+        `;
           tableBody.appendChild(newRow);
         });
       }

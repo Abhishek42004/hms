@@ -23,7 +23,7 @@ function calculateTotalPriceAfterDeduction() {
 // Update total price including deduction
 function updateNetPrice() {
   const totalPriceAfterDeduction = calculateTotalPriceAfterDeduction();
-  console.log(totalPriceAfterDeduction);
+
   totalPriceElement.textContent = totalPriceAfterDeduction.toFixed(2);
 }
 
@@ -32,7 +32,6 @@ function suggestService(cell) {
     document.querySelector(".suggestions-container").remove();
   }
 
-  console.log(cell);
   const suggestions = [
     "X-RAY SKULL AP",
     "X-RAY SKULL LAT.",
@@ -91,10 +90,10 @@ function suggestService(cell) {
     "X-RAY CHEST AP",
     "X-RAY CHEST PA",
     "X-RAY CERVICAL AP VIEW",
-    "X-RAY CERVICAL LAT VIEW"
+    "X-RAY CERVICAL LAT VIEW",
   ];
   const suggestionsContainer = createSuggestionsContainer();
-  console.log(suggestionsContainer);
+
   cell.parentNode.appendChild(suggestionsContainer);
 
   cell.addEventListener("input", function () {
@@ -194,9 +193,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Check if the patient number needs to reset for the day
     if (localStorage.getItem("lastGeneratedDate") !== formattedDate) {
-      
       localStorage.setItem("patientNumber", 1);
-      console.log("patient number added");
     }
 
     // Retrieve or initialize patient number
@@ -277,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Retrieve or initialize patient number
     let patientNumber = parseInt(localStorage.getItem("patientNumber")) || 1;
     let time = getCurrentTime();
-    console.log(time);
+
     // Increment and update patient number for the next registration
     localStorage.setItem("patientNumber", patientNumber + 1);
 
@@ -359,6 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Store the form data in localStorage
       if (formData) {
         saveDataLocally(formData);
+        saveToIndexedDb(formData);
         localStorage.setItem("formData", JSON.stringify(formData));
         event.target.reset();
         window.location.href = "./bill.html";
@@ -372,11 +370,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Check if there is data for the current working day in local storage
     if (!localStorage.getItem(currentDate)) {
       // Clear the entire local storage
-
       localStorage.clear();
       localStorage.setItem("patientNumber", 2);
       localStorage.setItem("lastGeneratedDate", formatDate);
-
       // Create a new entry for the current working day
       const newPatientList = [formData];
       // Save the new data to local storage
@@ -384,13 +380,23 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       // Update existing data for the current day
       let currentDayData = JSON.parse(localStorage.getItem(currentDate));
-
       // Add the new patient information to the existing data
       currentDayData.push(formData);
-
       // Save the updated data back to local storage
       localStorage.setItem(currentDate, JSON.stringify(currentDayData));
     }
+  }
+  function saveToIndexedDb(patientData) {
+    // Add the patient record to IndexedDB
+    hospitalDB
+      .addPatient(patientData)
+      .then(() => {
+        console.log("Patient record added successfully");
+      })
+      .catch((error) => {
+        console.error("Error adding patient record:", error);
+        alert("Failed to add patient record. Please try again.");
+      });
   }
 
   function getCurrentTime() {

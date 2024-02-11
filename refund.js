@@ -32,7 +32,6 @@ function suggestService(cell) {
     document.querySelector(".suggestions-container").remove();
   }
 
-  console.log(cell);
   const suggestions = [
     "X-RAY SKULL AP",
     "X-RAY SKULL LAT.",
@@ -176,26 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const quantityFields = document.querySelectorAll(".quantity-field");
 
   function serializeFormData() {
-    console.log("serialize 1");
     // Retrieve values from the form elements
-    const serialNo = document.getElementById("serialNo").value.trim();
-    const date = getCurrentDate();
-    const patientName = document.getElementById("patientName").value.trim();
-    const age = document.getElementById("age").value.trim();
-    const ageUnit = document.getElementById("ageUnit").value.trim();
-    const relationship = document
-      .querySelector('input[name="relationship"]:checked')
-      .value.trim();
-    const paymentMode = document
-      .querySelector('input[name="paymentMode"]:checked')
-      .value.trim();
-    const name = document.getElementById("name").value.trim();
-    const address = document.getElementById("address").value.trim();
-    const contactNo = document.getElementById("contactNo").value.trim();
-    const referred = document.getElementById("referred").value.trim();
-    const consultancy = document.getElementById("consultancy").value.trim();
-    const gender = document.getElementById("gender").value.trim();
-    const admitDate = document.getElementById("admitDate").value.trim();
 
     // Serialize services data
     const servicesTableRows = document.querySelectorAll(
@@ -229,24 +209,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Retrieve or initialize patient number
 
     let time = getCurrentTime();
-    console.log(time);
-    // Increment and update patient number for the next registration
 
     // Return the serialized data
     return {
-      serialNo,
-      date,
-      patientName,
-      age: `${age} ${ageUnit}`,
-      relationship,
-      name,
-      address,
-      contactNo,
-      paymentMode,
-      referred,
-      consultancy,
-      gender,
-      admitDate,
       servicesData,
       totalAmount,
       lessAmount,
@@ -304,13 +269,23 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("submit", function (event) {
       event.preventDefault(); // Prevent the default form submission behavior
       localStorage.removeItem("formData");
+      let serialNo = document.getElementById("serialNo").value;
       // Serialize form data
       const formData = serializeFormData();
-
       // Store the form data in localStorage
       if (formData) {
         processRefund(formData);
-
+        // Add the patient record to IndexedDB
+        // Update the patient record in IndexedDB
+        hospitalDB
+          .updatePatient(serialNo, formData)
+          .then(() => {
+            console.log("Patient record updated successfully");
+          })
+          .catch((error) => {
+            console.error("Error updating patient record:", error);
+            alert("Failed to update patient record. Please try again.");
+          });
         event.target.reset();
         window.location.href = "./bill.html";
       }
@@ -343,30 +318,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // If patient with given serial number is not found
     alert("Patient not found in local storage!");
-  }
-
-  // Function to save data locally based on the mechanism
-  function saveDataLocally(formData) {
-    const currentDate = new Date().toISOString().split("T")[0];
-    console.log(currentDate);
-    // Check if there is data for the current working day in local storage
-    if (!localStorage.getItem(currentDate)) {
-      // Clear the entire local storage
-      localStorage.clear();
-      // Create a new entry for the current working day
-      const newPatientList = [formData];
-      // Save the new data to local storage
-      localStorage.setItem(currentDate, JSON.stringify(newPatientList));
-    } else {
-      // Update existing data for the current day
-      let currentDayData = JSON.parse(localStorage.getItem(currentDate));
-
-      // Add the new patient information to the existing data
-      currentDayData.push(formData);
-
-      // Save the updated data back to local storage
-      localStorage.setItem(currentDate, JSON.stringify(currentDayData));
-    }
   }
 
   function getCurrentTime() {
