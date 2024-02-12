@@ -236,9 +236,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const relationship = document
       .querySelector('input[name="relationship"]:checked')
       .value.trim();
-    const paymentMode = document
-      .querySelector('input[name="paymentMode"]:checked')
-      .value.trim();
+    // const paymentMode = document
+    //   .querySelector('input[name="paymentMode"]:checked')
+    //   .value.trim();
+    const cashPayment = parseFloat(
+      document.getElementById("cashPayment").value.trim()
+    );
+    const onlinePayment = parseFloat(
+      document.getElementById("onlinePayment").value.trim()
+    );
     const name = document.getElementById("name").value.trim();
     const address = document.getElementById("address").value.trim();
     const contactNo = document.getElementById("contactNo").value.trim();
@@ -291,7 +297,8 @@ document.addEventListener("DOMContentLoaded", function () {
       name,
       address,
       contactNo,
-      paymentMode,
+      cashPayment,
+      onlinePayment,
       referred,
       consultancy,
       gender,

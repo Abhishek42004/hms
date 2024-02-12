@@ -40,7 +40,8 @@
           name,
           address,
           contactNo,
-          paymentMode,
+          cashPayment,
+          onlinePayment,
           referred,
           consultancy,
           gender,
@@ -158,16 +159,38 @@
                     <label for="admitDate">Admit Date</label>
                     <input type="date" id="admitDate" name="admitDate" oninput="this.value = this.value.toUpperCase()" />
                 </div>
-                <div class="form-group" style="border: 2px solid #007bff;color: white;padding: 10px;border-radius: 5px;">
-                    <label>Payment Mode:</label>
-                    <div class="radio-options">
-                        <input type="radio" id="cash" name="paymentMode" value="CASH" checked required />
-                        <label for="cash">Cash</label> /
-                        <input type="radio" id="ONLINE" name="paymentMode" value="ONLINE" required />
-                        <label for="ONLINE">Online</label>
-                        <!-- Add more radio options as needed -->
-                    </div>
-                </div>
+                <div
+              class="form-group"
+              style="
+                border: 2px solid #007bff;
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+              "
+            >
+              <label>Payment Mode:</label>
+              <div class="form-group">
+                <label for="cash">Cash</label> /
+                <input
+                  type="number"
+                  id="cashPayment"
+                  name="cashPayment"
+                  min="0"
+                  value="${cashPayment}"
+                  
+                />
+                <label for="ONLINE">Online</label>
+                <input
+                  type="number"
+                  id="onlinePayment"
+                  name="onlinePayment"
+                  min="0"
+                  value="${onlinePayment}"
+                />
+
+                <!-- Add more radio options as needed -->
+              </div>
+            </div>
             </div>
             <button type="submit" id="patientRegistrationSubmitBtn">Submit</button>
         </form>

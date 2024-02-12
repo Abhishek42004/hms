@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
       dischargeDate,
       date,
       servicesData,
-      paymentMode
+      cashPayment,
+      onlinePayment,
     } = userData;
 
     // Get the current time
@@ -58,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (netAmount >= 0) {
       totalSection = `
             <div class="invoice-total" style="line-height:12px">
-            <p style="font-weight:normal">Payment Mode: ${paymentMode}
+            <p style="font-weight:normal">Payment Mode: cash -  ${cashPayment} online - ${onlinePayment}
             </p>
                 <p style="font-weight:normal">Total Amount: ₹ ${totalAmount.toFixed(
                   2

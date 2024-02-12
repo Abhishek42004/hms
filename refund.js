@@ -176,7 +176,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function serializeFormData() {
     // Retrieve values from the form elements
-
+    const cashPayment = parseFloat(
+      document.getElementById("cashPayment").value.trim()
+    );
+    const onlinePayment = parseFloat(
+      document.getElementById("onlinePayment").value.trim()
+    );
     // Serialize services data
     const servicesTableRows = document.querySelectorAll(
       "#serviceTable tbody tr"
@@ -217,6 +222,8 @@ document.addEventListener("DOMContentLoaded", function () {
       lessAmount,
       netAmount,
       time,
+      cashPayment,
+      onlinePayment,
     };
   }
 
@@ -274,6 +281,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const formData = serializeFormData();
       // Store the form data in localStorage
       if (formData) {
+        console.log(formData);
         processRefund(formData);
         // Add the patient record to IndexedDB
         // Update the patient record in IndexedDB
@@ -293,7 +301,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to update patient data in local storage after refund
   function processRefund(data) {
-    console.log(data);
+    
     let serialNo = document.getElementById("serialNo").value;
     let currentDate = new Date().toISOString().split("T")[0];
     let patientDataArray = JSON.parse(localStorage.getItem(currentDate)) || [];
@@ -302,7 +310,8 @@ document.addEventListener("DOMContentLoaded", function () {
     for (let i = 0; i < patientDataArray.length; i++) {
       if (patientDataArray[i].serialNo === serialNo) {
         // Update patient data with form values
-
+        patientDataArray[i].cashPayment = data.cashPayment;
+        patientDataArray[i].onlinePayment = data.onlinePayment;
         patientDataArray[i].servicesData = data.servicesData;
         patientDataArray[i].netAmount = data.netAmount;
         patientDataArray[i].totalAmount = data.totalAmount;

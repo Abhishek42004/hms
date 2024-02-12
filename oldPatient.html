@@ -212,24 +212,22 @@
               "
             >
               <label>Payment Mode:</label>
-              <div class="radio-options">
-                <input
-                  type="radio"
-                  id="cash"
-                  name="paymentMode"
-                  value="CASH"
-                  checked
-                  required
-                />
+              <div class="form-group">
                 <label for="cash">Cash</label> /
                 <input
-                  type="radio"
-                  id="ONLINE"
-                  name="paymentMode"
-                  value="ONLINE"
-                  required
+                  type="number"
+                  id="cashPayment"
+                  name="cashPayment"
+                  min="0"
                 />
+
                 <label for="ONLINE">Online</label>
+                <input
+                  type="number"
+                  id="onlinePayment"
+                  name="onlinePayment"
+                  min="0"
+                />
 
                 <!-- Add more radio options as needed -->
               </div>

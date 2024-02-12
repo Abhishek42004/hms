@@ -330,7 +330,8 @@
               <th>Visited Time</th>
               <th>Reffered</th>
               <th>Services Opted</th>
-              <th>Mode</th>
+              <th>Cash</th>
+              <th>Online</th>
               <th>Total</th>
               <th>Refund</th>
             </tr>
@@ -470,7 +471,8 @@
         <td>${patient.time ? patient.time.toUpperCase() : ""}</td>
         <td>${patient.referred}</td>
         <td>${servicesOpted}</td>
-        <td>${patient.paymentMode}</td>
+        <td>${patient.cashPayment}</td>
+        <td>${patient.onlinePayment}</td>
         <td>${
           patient.netAmount === "NO PAID"
             ? "NO PAID"
@@ -498,14 +500,9 @@
 
       // Iterate through patient data to calculate totals
       patientData.forEach((patient) => {
-        if (patient.paymentMode === "CASH") {
-          if (patient.netAmount != "NO PAID") {
-            totalCashCollection += patient.netAmount;
-          }
-        } else if (patient.paymentMode === "ONLINE") {
-          if (patient.netAmount != "NO PAID") {
-            totalOnlineCollection += patient.netAmount;
-          }
+        if (patient.netAmount != "NO PAID") {
+          totalCashCollection += patient.cashPayment;
+          totalOnlineCollection += patient.onlinePayment;
         }
       });
       // Update the HTML with the calculated data

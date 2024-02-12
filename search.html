@@ -105,20 +105,6 @@
       <header>Patient Record Search</header>
 
       <form id="searchForm">
-        <select id="searchProperty" name="searchProperty">
-          <option value="patientName">Patient Name</option>
-          <option value="serialNo">Serial No.</option>
-          <option value="date">Visit Date</option>
-          <option value="age">Age</option>
-          <option value="name">Relative Name</option>
-          <option value="address">Adress</option>
-          <option value="contactNo">Contact No.</option>
-          <option value="referred">Referred</option>
-          <option value="gender">Gender</option>
-
-          <!-- Add more options as needed -->
-        </select>
-
         <input
           style="flex: 1"
           type="text"
@@ -146,6 +132,8 @@
             <th>Referred</th>
             <th>Consultancy</th>
             <th>Admit Date</th>
+            <th>cash</th>
+            <th>online</th>
             <th>Total</th>
             <th>Less</th>
             <th>Net Amount</th>
@@ -162,7 +150,7 @@
       // Function to send a GET request to search patient records
       function searchRecords() {
         // Get the selected search property and search input value
-        const searchProperty = document.getElementById("searchProperty").value;
+
         const searchInput = document.getElementById("searchInput").value;
 
         // Construct the URL for the search request
@@ -232,6 +220,8 @@
     <td>${patientData.referred}</td>
     <td>${patientData.consultancy}</td>
     <td>${patientData.admitDate}</td>
+    <td>${patientData.cashPayment}</td>
+    <td>${patientData.onlinePayment}</td>
     <td>${patientData.totalAmount}</td>
     <td>${patientData.lessAmount}</td>
     <td>${patientData.netAmount}</td>
