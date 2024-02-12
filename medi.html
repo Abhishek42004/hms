@@ -218,6 +218,15 @@
           <input type="text" id="patientName" name="patientName" required />
         </div>
         <div class="row">
+          <label for="relative">Relative:</label>
+          <select id="relative" name="relative" required>
+            <option value="S/o">S/o</option>
+            <option value="D/o">D/o</option>
+            <option value="W/o">W/o</option>
+          </select>
+          <input type="text" id="relativeName" name="relativeName" required />
+        </div>
+        <div class="row">
           <label for="age">Age:</label>
           <input
             style="width: 40px; margin-right: 10px"
@@ -258,12 +267,13 @@
       <div id="patient-info">
         <p>
           This is to certify that <span id="salutationPlaceholder"></span>
-          <span id="patientNamePlaceholder"></span>
-          , Age:
+          <span id="patientNamePlaceholder"></span>,
+          <span id="relativePlaceholder"></span> of
+          <span id="relativeNamePlaceholder"></span>, Age:
           <span id="agePlaceholder"></span> years,<span
             id="genderPlaceholder"
           ></span
-          >, Was under my treatment since:
+          >, was under my treatment since:
           <span id="treatmentStartDatePlaceholder"></span> suffering from
           <span id="diagnosisPlaceholder"></span> He/She is/Was advised
           treatment or rest for this period:
@@ -279,6 +289,7 @@
         </p>
       </div>
     </div>
+
     <script src="./indexedDb.js"></script>
     <script>
       const form = document.getElementById("medicalForm");
@@ -291,6 +302,8 @@
         const patientData = {
           salutation: formData.get("salutation"),
           patientName: formData.get("patientName"),
+          relative: formData.get("relative"),
+          relativeName: formData.get("relativeName"),
           age: formData.get("age"),
           gender: formData.get("gender"),
           treatmentStartDate: formData.get("treatmentStartDate"),
@@ -305,6 +318,10 @@
           formData.get("salutation");
         document.getElementById("patientNamePlaceholder").innerText =
           formData.get("patientName");
+        document.getElementById("relativePlaceholder").innerText =
+          formData.get("relative");
+        document.getElementById("relativeNamePlaceholder").innerText =
+          formData.get("relativeName");
         document.getElementById("agePlaceholder").innerText =
           formData.get("age");
         document.getElementById("genderPlaceholder").innerText =

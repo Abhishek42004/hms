@@ -127,10 +127,14 @@
           <tr>
             <th>Issue</th>
             <th>Patient Name</th>
-            <th>Diagnosis</th>
-            <th>Treatment Start Date</th>
+            <th>Relation</th>
             <th>Age</th>
             <th>Gender</th>
+            <th>Diagnosis</th>
+            <th>Treatment Start Date</th>
+            <th>Rest Period</th>
+            
+
             <!-- Add more table headers as needed -->
           </tr>
         </thead>
@@ -172,10 +176,14 @@
           newRow.innerHTML = `
           <td>${record.issueDate}</td>
           <td>${record.patientName}</td>
-          <td>${record.diagnosis}</td>
-          <td>${record.treatmentStartDate}</td>
+          <td>${record.relative} - ${record.relativeName}</td>
           <td>${record.age}</td>
           <td>${record.gender}</td>
+          <td>${record.diagnosis}</td>
+          <td>${record.treatmentStartDate}</td>
+          <td>${record.restPeriod}</td>
+
+        
           <!-- Add more table cells as needed -->
         `;
           tableBody.appendChild(newRow);
