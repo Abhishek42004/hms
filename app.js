@@ -402,7 +402,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((error) => {
         console.error("Error adding patient record:", error);
-        alert("Failed to add patient record. Please try again.");
+        
       });
   }
 

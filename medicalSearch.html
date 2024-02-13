@@ -104,12 +104,7 @@
       <header>Medical Record Search</header>
 
       <form id="searchForm">
-        <select id="searchProperty" name="searchProperty">
-          <option value="patientName">Patient Name</option>
-          <option value="diagnosis">Diagnosis</option>
-          <option value="treatmentStartDate">Treatment Start Date</option>
-          <!-- Add more options as needed -->
-        </select>
+     
 
         <input
           style="flex: 1"
@@ -146,7 +141,7 @@
     <script src="./indexedDb.js"></script>
     <script>
       function searchRecords() {
-        const searchProperty = document.getElementById("searchProperty").value;
+        
         const searchInput = document.getElementById("searchInput").value;
 
         hospitalDB

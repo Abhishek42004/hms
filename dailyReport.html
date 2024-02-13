@@ -374,7 +374,7 @@
         let patientData = JSON.parse(localStorage.getItem(currentDate)) || [];
         // Filter out already synced patients
         const unsyncedPatientData = patientData.filter(
-          (patient) => !patient.isSynced
+          (patient) => !patient.isSynced || patient.needUpdate
         );
         // Check if there are unsynced patient data
         if (unsyncedPatientData.length === 0) {
@@ -400,6 +400,7 @@
             // Mark uploaded patient data as synced
             unsyncedPatientData.forEach((patient) => {
               patient.isSynced = true;
+              patient.needUpdate = false;
             });
             localStorage.setItem(currentDate, JSON.stringify(patientData));
             alert("Patient data uploaded successfully!");

@@ -301,7 +301,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to update patient data in local storage after refund
   function processRefund(data) {
-    
     let serialNo = document.getElementById("serialNo").value;
     let currentDate = new Date().toISOString().split("T")[0];
     let patientDataArray = JSON.parse(localStorage.getItem(currentDate)) || [];
@@ -316,6 +315,7 @@ document.addEventListener("DOMContentLoaded", function () {
         patientDataArray[i].netAmount = data.netAmount;
         patientDataArray[i].totalAmount = data.totalAmount;
         patientDataArray[i].lessAmount = data.lessAmount;
+        patientDataArray[i]["needUpdate"] = true;
         localStorage.setItem("formData", JSON.stringify(patientDataArray[i]));
 
         // // Update local storage with modified patient data

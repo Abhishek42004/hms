@@ -202,7 +202,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let patientNumber = parseInt(localStorage.getItem("patientNumber")) || 1;
 
     // Generate serial number by combining formatted date and padded patient number
-    const serialNumber = formattedDate + "S" + padNumber(patientNumber, 3);
+    const serialNumber =
+      formattedDate + "S" + (Math.floor(Math.random() * 900) + 100);
 
     // Update the input field with the serial number
     document.getElementById("serialNo").value = serialNumber;
@@ -376,7 +377,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (response.ok) {
               return response.json();
             }
-            throw new Error("Failed to upload patient data");
           })
           .then((data) => {
             console.log("Patient data uploaded successfully:", data);
@@ -387,7 +387,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error uploading patient data:", error);
             alert("Failed to upload patient data. Please try again later.");
           });
-
+        saveToIndexedDb(formData);
         localStorage.setItem("formData", JSON.stringify(formData));
         event.target.reset();
         window.location.href = "./bill.html";
@@ -413,6 +413,18 @@ document.addEventListener("DOMContentLoaded", function () {
     return currentTime;
   }
 
+  function saveToIndexedDb(patientData) {
+    // Add the patient record to IndexedDB
+    hospitalDB
+      .addPatient(patientData)
+      .then(() => {
+        console.log("Patient record added successfully");
+      })
+      .catch((error) => {
+        console.error("Error adding patient record:", error);
+        alert("Failed to add patient record. Please try again.");
+      });
+  }
   // Attach a click event listener to the "No Paid" button
   document
     .getElementById("noPaidButton")
