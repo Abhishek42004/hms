@@ -1,12 +1,12 @@
 const CACHE_NAME = "my-hms-shop-cache-v1";
 const urlsToCache = [
   "./",
-  "./index.html", 
+  "./index.html",
   "./admin.js",
   "./app.js",
-  "./bill.html", 
+  "./bill.html",
   "./dailyReport.html",
-  "./indexedDb.js", 
+  "./indexedDb.js",
   "./manifest.json",
   "./medi.html",
   "./medicalSearch.html",
@@ -24,7 +24,7 @@ const urlsToCache = [
   "./logo-512.png",
   "./logo-128.png",
   "./logo-256.png",
-  
+
 ];
 
 self.addEventListener("install", function (event) {
@@ -39,7 +39,7 @@ self.addEventListener("install", function (event) {
 
 self.addEventListener("fetch", function (event) {
   event.respondWith(
-    caches.match(event.request, {ignoreSearch: true}).then(function (response) {
+    caches.match(event.request, { ignoreSearch: true }).then(function (response) {
       if (response) {
         return response;
       }

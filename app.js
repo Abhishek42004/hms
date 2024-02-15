@@ -228,6 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const serialNo = document.getElementById("serialNo").value.trim();
     const date = getCurrentDate();
     const patientName = document.getElementById("patientName").value.trim();
+    const staffName = document.getElementById("staffName").value.trim()
     const age = document.getElementById("age").value.trim();
     const ageUnit = document.getElementById("ageUnit").value.trim();
     const relationship = document
@@ -305,6 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
       lessAmount,
       netAmount,
       time,
+      staffName
     };
   }
 

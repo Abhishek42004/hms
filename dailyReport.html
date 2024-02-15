@@ -59,8 +59,8 @@
       }
 
       #patientTable th {
-        background-color: #3498db;
-        color: white;
+        background-color: yellow;
+        color: black
       }
 
       #patientTable tbody tr:nth-child(even) {
@@ -112,8 +112,9 @@
       }
 
       #summaryTable th {
-        background-color: #3498db;
-        color: white;
+        background-color: yellow;
+        
+        color: black;
       }
 
       #summaryTable tbody tr:nth-child(even) {
@@ -329,11 +330,12 @@
               <th>SEX</th>
               <th>Visited Time</th>
               <th>Reffered</th>
+              <th>Staff</th>
               <th>Services Opted</th>
               <th>Cash</th>
               <th>Online</th>
               <th>Total</th>
-              <th>Refund</th>
+              <th>Rf</th>
             </tr>
           </thead>
           <tbody id="patientTableBody">
@@ -471,6 +473,7 @@
         <td>${patient.gender.charAt(0).toUpperCase()}</td>
         <td>${patient.time ? patient.time.toUpperCase() : ""}</td>
         <td>${patient.referred}</td>
+        <td>${patient.staffName}</td>
         <td>${servicesOpted}</td>
         <td>${patient.cashPayment}</td>
         <td>${patient.onlinePayment}</td>
@@ -481,7 +484,7 @@
         }</td>
         <td><a href="./refund.html?sNo=${patient.serialNo}" id="${
             patient.serialNo
-          }" class="refund_btn" ">Refund</a></td>
+          }" class="refund_btn" ">Rf</a></td>
       `;
           patientTableBody.appendChild(row);
         });

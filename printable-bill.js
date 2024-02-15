@@ -31,6 +31,8 @@ document.addEventListener("DOMContentLoaded", function () {
       servicesData,
       cashPayment,
       onlinePayment,
+      staffName,
+      address
     } = userData;
 
     // Get the current time
@@ -86,13 +88,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
             <div class="invoice-details">
                 <!-- Your dynamic content goes here -->
-                <p>Serial No: ${serialNo}</p>
+                <div style="display:flex;justify-content:space-between">
+                
+                <p> <b>${hours}:${minutes}:${seconds} ${ampm} </b></p>
+            </div>
+            <br>
+                <p>Staff : ${staffName}</p>
+                <p style="margin-top:0px"><b>Serial No:  ${serialNo} </b></p>
                 <p>Date: ${date} </p>
-                <p style="line-height:14px">PATIENT'S NAME : ${patientName}</p>
-                <p>Age: ${age}</p>
+                <p style="line-height:14px"><b>PATIENT'S NAME : ${patientName}</b></p>
+                <p><b>Age: ${age}</b></p>
                 <p>Gender : ${gender}</p>
-                <p>${relationship} : ${name}</p>
-                <p>Referred: ${referred}</p>
+                <p style="line-height:16px">${relationship} : ${name}</p>
+                <p style="line-height:16px">Referred: ${referred}</p>
                 <p>Contact No: ${contactNo}</p>
             </div>
 
@@ -113,16 +121,20 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
 
         <div class="verification-token">
-            <div style="display:flex;justify-content:space-between">
-                <p> <b>${date}</b> </p>
-                <p> <b>${hours}:${minutes}:${seconds} ${ampm} </b></p>
+        <div class="invoice-header">
+                <img  src="./logo3.png"></img>
             </div>
+        <div style="display:flex;justify-content:space-between">
+        <p> <b>${date}</b> </p>
+        
+    </div>
             <p style="margin-top:0px"><b>Serial No:</b>  ${serialNo} </p>
 
             <p style="margin-top:0px;line-height:14px"><b>Patient Name:</b>  ${patientName} </p>
-            <p><b>Referred:</b>  ${referred}</p>
+            
             <p><b>Age:</b>  ${age} </p>
             <p><b>Gender :</b>  ${gender} </p>
+            <p style="line-height:16px"><b>Address :</b>  ${address} </p>
 
             <table class="invoice-table">
                 <thead>
