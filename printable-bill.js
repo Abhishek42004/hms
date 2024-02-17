@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
       cashPayment,
       onlinePayment,
       staffName,
+      adhaarNo,
       address
     } = userData;
 
@@ -64,11 +65,11 @@ document.addEventListener("DOMContentLoaded", function () {
             <p style="font-weight:normal">Payment Mode: cash -  ${cashPayment} online - ${onlinePayment}
             </p>
                 <p style="font-weight:normal">Total Amount: ₹ ${totalAmount.toFixed(
-                  2
-                )}</p>
+        2
+      )}</p>
                 <p style="font-weight:normal">Less: ₹ ${lessAmount.toFixed(
-                  2
-                )}</p>
+        2
+      )}</p>
                 <p>Net Amount: ₹ ${netAmount.toFixed(2)}</p>
             </div>
         `;
@@ -97,11 +98,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 <p style="margin-top:0px"><b>Serial No:  ${serialNo} </b></p>
                 <p>Date: ${date} </p>
                 <p style="line-height:14px"><b>PATIENT'S NAME : ${patientName}</b></p>
-                <p><b>Age: ${age}</b></p>
-                <p>Gender : ${gender}</p>
+                <p>Contact : ${contactNo}</p>
+                <p><b>Age: ${age} (${gender})  </b> </p>
+                
                 <p style="line-height:16px">${relationship} : ${name}</p>
+                <p style="line-height:16px">Adhaar : ${adhaarNo}</p>
+                
+                <p style="line-height:16px"><b>Address :</b>  ${address} </p>
                 <p style="line-height:16px">Referred: ${referred}</p>
-                <p>Contact No: ${contactNo}</p>
+                
             </div>
 
             <table class="invoice-table" style="line-height:5px">

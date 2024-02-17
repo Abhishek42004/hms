@@ -250,6 +250,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const consultancy = document.getElementById("consultancy").value.trim();
     const gender = document.getElementById("gender").value.trim();
     const admitDate = document.getElementById("admitDate").value.trim();
+    console.log(document.getElementById("aadharNo"));
+    const adhaarNo = document.getElementById("aadharNo").value.trim()
+
 
     // Serialize services data
     const servicesTableRows = document.querySelectorAll(
@@ -306,7 +309,8 @@ document.addEventListener("DOMContentLoaded", function () {
       lessAmount,
       netAmount,
       time,
-      staffName
+      staffName,
+      adhaarNo
     };
   }
 
