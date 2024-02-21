@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    return `${day}-${month}-${year}`;
   }
   // Function to set total price to "No Paid"
   function setTotalPriceToNoPaid() {

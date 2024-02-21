@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (netAmount >= 0) {
       totalSection = `
             <div class="invoice-total" style="line-height:12px">
-            <p style="font-weight:normal">Payment Mode: cash -  ${cashPayment} online - ${onlinePayment}
+            <p style="font-weight:normal">Payment Mode:<b> cash -  ${cashPayment} online - ${onlinePayment}</b>
             </p>
                 <p style="font-weight:normal">Total Amount: ₹ ${totalAmount.toFixed(
         2
@@ -91,21 +91,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 <!-- Your dynamic content goes here -->
                 <div style="display:flex;justify-content:space-between">
                 
-                <p> <b>${hours}:${minutes}:${seconds} ${ampm} </b></p>
-            </div>
-            <br>
+                <p> <b>${hours}:${minutes}:${seconds} ${ampm} </b></p>    
                 <p>Staff : ${staffName}</p>
-                <p style="margin-top:0px"><b>Serial No:  ${serialNo} </b></p>
-                <p>Date: ${date} </p>
-                <p style="line-height:14px"><b>PATIENT'S NAME : ${patientName}</b></p>
-                <p>Contact : ${contactNo}</p>
-                <p><b>Age: ${age} (${gender})  </b> </p>
+            </div>
+            
+            
                 
-                <p style="line-height:16px">${relationship} : ${name}</p>
-                <p style="line-height:16px">Adhaar : ${adhaarNo}</p>
+            <div style="display:flex;justify-content:space-between">
+            <p style="margin-top:0px"><b>Serial No-  ${serialNo} </b></p> 
+            <p>Date: ${date} </p>
+            
+            
+            </div>
                 
-                <p style="line-height:16px"><b>Address :</b>  ${address} </p>
-                <p style="line-height:16px">Referred: ${referred}</p>
+                <p style="line-height:14px;grid-column:1/3"><b>PT-${patientName} - <b>${age} (${gender})  </b></b></p>
+                
+                
+                <p style="line-height:16px"><b>Ref.-${referred}</b></p>
+                <div style="display:flex;justify-content:space-between">
+                                
+                <p>Cont- ${contactNo}</p>
+                <p style="line-height:16px">Adhaar- ${adhaarNo}</p>
+                </div>
+                
+                <p style="line-height:16px">${relationship}-${name}</p>
+                
+                
+                <p style="line-height:16px"><b>Add-</b>${address} </p>
+                
                 
             </div>
 
