@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Record Search</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        overflow-x: scroll;
+        height: 100vh;
+      }
+
+      main {
+        width: 99%;
+        margin-top: 20px;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      header {
+        background-color: #3498db;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 1.5em;
+      }
+
+      form {
+        padding: 20px;
+        display: flex;
+        gap: 10px;
+      }
+
+      select,
+      input {
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 14px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 5px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #3498db;
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      tr:hover {
+        background-color: #e0e0e0;
+      }
+    </style>
+    <link rel="stylesheet" href="./navbar.css" />
+    <script src="./admin.js"></script>
+  </head>
+  <body>
+    <main>
+      <div class="navbar">
+        <div class="logo">Maheshwari Clinic</div>
+        <ul class="nav-list">
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./dailyReport.html">Report</a></li>
+          <li><a href="./medi.html">Medical</a></li>
+          <li><a href="./oldPatient.html">Old</a></li>
+        </ul>
+        <div class="burger-menu">&#9776;</div>
+      </div>
+      <header>Patient Record Search</header>
+
+      <form id="searchForm">
+       
+        
+        <input
+          style="flex: 1"
+          type="text"
+          id="filterInput"
+          name="searchInput"
+          placeholder="Enter (Name) , ( data - 2024-02-11) , ( phone number) , (age - 50 years) "
+        />
+
+        <button type="button" onclick="searchRecords()">Search</button>
+      </form>
+
+      <table id="patientTable">
+        <thead>
+          <tr>
+            <th>Serial No</th>
+            <th>Patient Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Contact No</th>
+            <th>Services Opted</th>
+
+            <th>Visit Date</th>
+            <th>Relationship</th>
+            <th>Address</th>
+            <th>Referred</th>
+            <th>Consultancy</th>
+            <th>Admit Date</th>
+            <th>cash</th>
+            <th>online</th>
+            <th>Total</th>
+            <th>Less</th>
+            <th>Net Amount</th>
+          </tr>
+        </thead>
+        <tbody id="patientTableBody">
+          <!-- Data rows will be dynamically added here -->
+        </tbody>
+      </table>
+    </main>
+    <script src="./indexedDb.js"></script>
+    <script>
+      // Sample function to simulate searching records
+      // Function to send a GET request to search patient records
+      function searchRecords() {
+        // Get the selected search property and search input value
+
+        
+        
+        // Construct the URL for the search request
+        const searchUrl = `https://script.google.com/macros/s/AKfycbxsR4Fl_Vzr8ONeooJA9RmLtJNYML79ayotB_CLIvtex1kE0oceNfxFUnBesKAjB6wVLg/exec`;
+        
+        // Fetch API to send a GET request to the backend
+        fetch(searchUrl, { redirect: "follow" })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            // Call a function to update the table with the search results
+
+            updatePatientTable(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Failed to fetch patient data. Please try again.");
+          });
+      }
+
+      document
+        .getElementById("filterInput")
+        .addEventListener("keyup", function () {
+          let filter = this.value.toUpperCase();
+          let tableBody = document.getElementById("patientTableBody");
+          let tr = tableBody.getElementsByTagName("tr");
+
+          // Loop through all table rows
+          for (let i = 0; i < tr.length; i++) {
+            let row = tr[i];
+            let shouldDisplay = false;
+
+            // Loop through all cells in this row
+            for (let j = 0; j < row.cells.length; j++) {
+              let cell = row.cells[j];
+              let txtValue = cell.textContent || cell.innerText;
+
+              // Check if the cell text contains the filter text
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                shouldDisplay = true;
+                break;
+              }
+            }
+
+            // Set the display style based on whether any cell matched the filter
+            if (shouldDisplay) {
+              row.style.display = "";
+            } else {
+              row.style.display = "none";
+            }
+          }
+        });
+
+      // Function to update the patient table with the provided data
+      function updatePatientTable(searchResults) {
+        const tableBody = document.getElementById("patientTableBody");
+        tableBody.innerHTML = "";
+
+        // Check if the searchResults array is empty
+        if (searchResults.length === 0) {
+          const emptyRow = document.createElement("tr");
+          emptyRow.innerHTML =
+            '<td colspan="15">No matching records found.</td>';
+          tableBody.appendChild(emptyRow);
+          return;
+        }
+
+        // Loop through the search results and add rows to the table
+        searchResults.forEach((patientData) => {
+          // Example usage
+
+          // Create a new row for the patient
+          const newRow = document.createElement("tr");
+          newRow.innerHTML = `
+          <td>${patientData.serialNo}</td>
+      <td>${patientData.patientName}</td>
+    <td>${patientData.age}</td>
+    <td>${patientData.gender}</td>
+    <td>${patientData.contactNo}</td>
+    <td>${patientData.servicesData
+      .filter((service) => service.service != "")
+      .map((service) => service.service)
+      .join(", ")}</td>
+    
+    
+    <td>${patientData.date}  ||  ${patientData.time}</td>
+    <td>${patientData.relationship} - ${patientData.name} </td>
+    <td>${patientData.address}</td>
+    <td>${patientData.referred}</td>
+    <td>${patientData.consultancy}</td>
+    <td>${patientData.admitDate}</td>
+    <td>${patientData.cashPayment}</td>
+    <td>${patientData.onlinePayment}</td>
+    <td>${patientData.totalAmount}</td>
+    <td>${patientData.lessAmount}</td>
+    <td>${patientData.netAmount}</td>
+      `;
+
+          // Append the new row to the table body
+          tableBody.appendChild(newRow);
+        });
+      }
+    </script>
+  </body>
+</html>
