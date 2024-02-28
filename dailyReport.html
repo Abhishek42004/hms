@@ -306,8 +306,13 @@
             <tr>
               <th>Date</th>
               <th>Total Patients</th>
-              <th>Total Cash Collection</th>
-              <th>Total Online Collection</th>
+              <th>Total Cash</th>
+              <th>Total Online</th>
+              <th>X-RAY</th>
+              <th>ECG</th>
+              <th>Blood Test</th>
+              <th>USG</th>
+              <th>Consultancy</th>
             </tr>
           </thead>
           <tbody>
@@ -317,6 +322,11 @@
               <td id="totalPatients">Loading....</td>
               <td id="totalCashCollection">Loading......</td>
               <td id="totalOnlineCollection">Loading......</td>
+              <td id="totalXRay">0</td>
+              <td id="totalECG">0</td>
+              <td id="totalBloodTest">0</td>
+              <td id="totalUSG">0</td>
+              <td id="totalConsultancy">0</td>
             </tr>
             <!-- Add more rows as needed -->
           </tbody>
@@ -440,6 +450,34 @@
         document.getElementById("refundWindow").style.display = "block";
       }
 
+      function calculateTotalServices(data) {
+        let totalServices = {
+          "X-RAY": 0,
+          ECG: 0,
+          "BLOOD TEST": 0,
+          USG: 0,
+          CONSULTANCY: 0,
+        };
+
+        data.forEach((patient) => {
+          patient.servicesData.forEach((service) => {
+            if (service.service.includes("X-RAY")) {
+              totalServices["X-RAY"]++;
+            } else if (service.service === "ECG") {
+              totalServices["ECG"]++;
+            } else if (service.service === "BLOOD TEST") {
+              totalServices["BLOOD TEST"]++;
+            } else if (service.service.includes("USG")) {
+              totalServices["USG"]++;
+            } else if (service.service === "CONSULTANCY") {
+              totalServices["CONSULTANCY"]++;
+            }
+          });
+        });
+
+        return totalServices;
+      }
+
       window.printBill = function () {
         window.print();
       };
@@ -524,6 +562,20 @@
         "totalOnlineCollection"
       ).textContent = `₹ ${totalOnlineCollection.toFixed(2)}`;
       document.getElementById("currentDate").textContent = currentDate;
+      // Function to calculate total services opted separately
+
+      // Call the function to calculate total services opted
+      const totalServices = calculateTotalServices(patientData);
+
+      // Update the HTML with the calculated data
+      document.getElementById("totalXRay").textContent = totalServices["X-RAY"];
+      document.getElementById("totalECG").textContent = totalServices["ECG"];
+      document.getElementById("totalBloodTest").textContent =
+        totalServices["BLOOD TEST"];
+      document.getElementById("totalUSG").textContent = totalServices["USG"];
+      document.getElementById("totalConsultancy").textContent =
+        totalServices["CONSULTANCY"];
+
       // Call the function with the sample data
       populatePatientTable(patientData);
     </script>
