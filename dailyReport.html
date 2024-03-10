@@ -429,42 +429,42 @@
           return;
         }
         // Make a POST request to the backend API endpoint
-        // fetch(
-        //   "https://script.google.com/macros/s/AKfycbxsR4Fl_Vzr8ONeooJA9RmLtJNYML79ayotB_CLIvtex1kE0oceNfxFUnBesKAjB6wVLg/exec",
-        //   {
-        //     redirect: "follow",
-        //     method: "POST",
-        //     headers: {
-        //       "Content-Type": "text/plain", // Update Content-Type header
-        //     },
-        //     body: JSON.stringify(unsyncedPatientData),
-        //   }
-        // )
-        //   .then((response) => {
-        //     console.log(response);
-        //     if (response.ok) {
-        //       return response.text();
-        //     }
-        //     throw new Error("Failed to upload patient data");
-        //   })
-        //   .then((data) => {
-        //     console.log("Patient data uploaded successfully:", data);
-        //     // Mark uploaded patient data as synced
-        //     unsyncedPatientData.forEach((patient) => {
-        //       patient.isSynced = true;
-        //       patient.needUpdate = false;
-        //     });
-        //     localStorage.setItem(currentDate, JSON.stringify(patientData));
-        //     alert("Patient data uploaded successfully!");
-        //   })
-        //   .catch((error) => {
-        //     console.error("Error uploading patient data:", error);
-        //     alert("Failed to upload patient data. Please try again later.");
-        //   })
-        //   .finally(() => {
-        //     // Re-enable the button after the upload process is complete or fails
-        //     document.getElementById("uploadButton").disabled = false;
-        //   });
+        fetch(
+          "https://script.google.com/macros/s/AKfycbxsR4Fl_Vzr8ONeooJA9RmLtJNYML79ayotB_CLIvtex1kE0oceNfxFUnBesKAjB6wVLg/exec",
+          {
+            redirect: "follow",
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain", // Update Content-Type header
+            },
+            body: JSON.stringify(unsyncedPatientData),
+          }
+        )
+          .then((response) => {
+            console.log(response);
+            if (response.ok) {
+              return response.text();
+            }
+            throw new Error("Failed to upload patient data");
+          })
+          .then((data) => {
+            console.log("Patient data uploaded successfully:", data);
+            // Mark uploaded patient data as synced
+            unsyncedPatientData.forEach((patient) => {
+              patient.isSynced = true;
+              patient.needUpdate = false;
+            });
+            localStorage.setItem(currentDate, JSON.stringify(patientData));
+            alert("Patient data uploaded successfully!");
+          })
+          .catch((error) => {
+            console.error("Error uploading patient data:", error);
+            alert("Failed to upload patient data. Please try again later.");
+          })
+          .finally(() => {
+            // Re-enable the button after the upload process is complete or fails
+            document.getElementById("uploadButton").disabled = false;
+          });
       }
       // Function to open refund window and fetch details based on serial number
       function openRefundWindow(serialNumber) {
