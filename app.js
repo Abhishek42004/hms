@@ -91,6 +91,7 @@ function suggestService(cell) {
     "X-RAY CHEST PA",
     "X-RAY CERVICAL AP VIEW",
     "X-RAY CERVICAL LAT VIEW",
+    "ADMIT AND OTHER SERVICES"
   ];
   const suggestionsContainer = createSuggestionsContainer();
 
